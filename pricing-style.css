@@ -1,3 +1,80 @@
-#pricing-section { padding: 50px 20px; text-align: center; background: #10101a; color: white; }
-#pricing-section div { max-width: 500px; margin: 18px auto; padding: 24px; border: 1px solid #a78bfa; border-radius: 16px; background: #1c1c2b; }
-#pricing-section h2 { font-size: 32px; margin-bottom: 30px; } #pricing-section h3 { color: #c4b5fd; } #pricing-section a { display: inline-block; margin-top: 20px; padding: 14px 24px; border-radius: 30px; background: #25d366; color: #102015; text-decoration: none; font-weight: bold; }
+#pricing-section {
+    padding: 70px 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #0b0b14, #17132b, #0b0b14);
+    color: #ffffff;
+}
+
+#pricing-section h2 {
+    font-size: clamp(28px, 5vw, 42px);
+    margin-bottom: 40px;
+    color: #ffffff;
+    letter-spacing: 1px;
+}
+
+#pricing-section div {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 500px;
+    margin: 24px auto;
+    padding: 30px 24px;
+    border: 1px solid rgba(167, 139, 250, 0.45);
+    border-radius: 22px;
+    background: linear-gradient(145deg, #201c35, #12121f);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease, border-color 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+#pricing-section div:hover {
+    transform: translateY(-5px);
+    border-color: #c4b5fd;
+    box-shadow: 0 16px 40px rgba(139, 92, 246, 0.18);
+}
+
+#pricing-section h3 {
+    color: #c4b5fd;
+    font-size: 23px;
+    margin-bottom: 15px;
+}
+
+#pricing-section p {
+    color: #e5e7eb;
+    line-height: 1.8;
+    font-size: 16px;
+}
+
+#pricing-section a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 14px 28px;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #25d366, #19b957);
+    color: #102015;
+    text-decoration: none;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#pricing-section a:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.25);
+}
+
+@media (max-width: 480px) {
+    #pricing-section {
+        padding: 45px 15px;
+    }
+
+    #pricing-section div {
+        padding: 24px 18px;
+        border-radius: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #pricing-section div,
+    #pricing-section a {
+        transition: none;
+    }
+}
