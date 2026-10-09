@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://spiderman86174-dot.github.io/my-business/sitemap.xml
