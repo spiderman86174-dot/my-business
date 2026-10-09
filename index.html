@@ -110,6 +110,156 @@ footer span { color:var(--purple); }
   nav { justify-content:center; }
   section { padding:55px 6%; }
 }
+
+/* Smooth entrance animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero h1,
+.hero p,
+.hero .buttons,
+#pricing-section {
+  animation: fadeUp 0.8s ease-out both;
+}
+
+.hero p {
+  animation-delay: 0.15s;
+}
+
+.hero .buttons {
+  animation-delay: 0.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero h1,
+  .hero p,
+  .hero .buttons,
+  #pricing-section {
+    animation: none;
+  }
+}
+
+
+/* Premium interaction effects */
+.card {
+  transition: transform 0.28s ease, border-color 0.28s ease,
+              box-shadow 0.28s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  border-color: #bd83ff88;
+  box-shadow: 0 14px 35px #00000045;
+}
+
+.btn {
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+              filter 0.25s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px #bd83ff40;
+  filter: brightness(1.08);
+}
+
+nav a {
+  transition: color 0.2s ease;
+}
+
+#pricing-section > div {
+  border: 1px solid #bd83ff35;
+  border-radius: 16px;
+  transition: transform 0.25s ease, border-color 0.25s ease,
+              box-shadow 0.25s ease;
+}
+
+#pricing-section > div:hover {
+  transform: translateY(-5px);
+  border-color: #bd83ff;
+  box-shadow: 0 12px 30px #00000040;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .btn, nav a, #pricing-section > div {
+    transition: none !important;
+  }
+  .card:hover, .btn:hover, #pricing-section > div:hover {
+    transform: none;
+  }
+}
+
+
+/* Premium project gallery */
+.project {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at top right, #bd83ff20, transparent 65%),
+    linear-gradient(145deg, #191626, #0d0c16);
+}
+
+.project::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid #e6c47a20;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.project .icon {
+  display: inline-grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  margin-bottom: 15px;
+  border-radius: 16px;
+  background: #bd83ff18;
+  border: 1px solid #bd83ff40;
+  font-size: 27px;
+}
+
+.project h3 {
+  color: #e6c47a;
+  margin-bottom: 8px;
+}
+
+.project p {
+  color: #b9b5c8;
+}
+
+.project:hover {
+  border-color: #e6c47a80;
+  box-shadow: 0 14px 35px #bd83ff20;
+}
+
+@media (max-width: 600px) {
+  #projects .grid {
+    grid-template-columns: 1fr;
+  }
+
+  #projects .project {
+    padding: 22px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #projects .project {
+    transition: none;
+  }
+}
+
 </style>
 <style>
 /* PREMIUM VISUAL UPGRADE */
