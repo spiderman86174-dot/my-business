@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Nermeen Mansour | Creative Studio</title>
+<meta name="description" content="AI Nermeen Mansour creative portfolio">
+<style>
+:root {
+  --bg:#080810;
+  --card:#151321;
+  --purple:#bd83ff;
+  --gold:#e6c47a;
+  --text:#fff;
+  --muted:#b9b5c8;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.7;
+}
+a { color:inherit; text-decoration:none; }
+header {
+  position:sticky; top:0; z-index:10;
+  background:#080810ee;
+  border-bottom:1px solid #ffffff18;
+  padding:15px 6%;
+  display:flex; justify-content:space-between;
+  align-items:center; flex-wrap:wrap; gap:12px;
+}
+.logo { color:var(--purple); font-weight:bold; font-size:19px; }
+nav { display:flex; flex-wrap:wrap; gap:15px; }
+nav a { font-size:14px; color:var(--muted); }
+nav a:hover { color:var(--gold); }
+section { padding:75px 7%; }
+.hero {
+  min-height:78vh;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:flex-start;
+  background:radial-gradient(ellipse at 80% 30%,#542b7945,transparent 55%);
+}
+.badge {
+  color:var(--gold); border:1px solid #e6c47a66;
+  padding:6px 13px; border-radius:30px;
+  font-size:12px; letter-spacing:2px;
+}
+h1 {
+  font-size:clamp(38px,8vw,72px);
+  line-height:1.12; margin:22px 0;
+}
+h1 span,.section-title span { color:var(--purple); }
+.hero p,.subtitle { color:var(--muted); max-width:650px; }
+.buttons { display:flex; flex-wrap:wrap; gap:13px; margin-top:28px; }
+.btn {
+  display:inline-block; padding:12px 20px;
+  border-radius:8px; font-weight:bold;
+  background:var(--purple); color:#130d1b;
+  border:1px solid var(--purple); cursor:pointer;
+}
+.btn.secondary { background:transparent; color:var(--gold); border-color:var(--gold); }
+.btn:hover { transform:translateY(-2px); }
+.section-title { font-size:clamp(28px,5vw,40px); text-align:center; margin-bottom:14px; }
+.subtitle { text-align:center; margin:0 auto 35px; }
+.about {
+  max-width:850px; margin:auto; text-align:center;
+  color:var(--muted); font-size:17px;
+}
+.grid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));
+  gap:18px; margin-top:30px;
+}
+.card {
+  padding:25px; border-radius:15px;
+  background:linear-gradient(145deg,#191626,#0f0e18);
+  border:1px solid #ffffff18;
+  transition:.25s;
+}
+.card:hover { transform:translateY(-5px); border-color:#bd83ff88; }
+.icon { font-size:30px; margin-bottom:12px; }
+.card h3 { color:var(--gold); margin-bottom:9px; }
+.card p { color:var(--muted); font-size:14px; }
+.project {
+  min-height:150px; display:flex;
+  flex-direction:column; justify-content:center;
+  background:radial-gradient(circle at top right,#bd83ff30,transparent 60%),#151321;
+}
+.contact-box {
+  max-width:650px; margin:auto; padding:25px;
+  border:1px solid #ffffff20; border-radius:15px;
+  background:var(--card);
+}
+label { display:block; margin:12px 0 5px; }
+input,textarea {
+  width:100%; padding:12px; border-radius:8px;
+  border:1px solid #ffffff30; background:#090811;
+  color:white; font:inherit;
+}
+textarea { min-height:120px; resize:vertical; }
+footer {
+  text-align:center; padding:25px;
+  border-top:1px solid #ffffff18;
+  color:var(--muted); font-size:13px;
+}
+footer span { color:var(--purple); }
+@media(max-width:500px) {
+  header { justify-content:center; }
+  nav { justify-content:center; }
+  section { padding:55px 6%; }
+}
+</style>
+<style>
+/* PREMIUM VISUAL UPGRADE */
+body {
+  background:
+    radial-gradient(ellipse at 10% 10%, rgba(130,60,210,.16), transparent 40%),
+    radial-gradient(ellipse at 90% 45%, rgba(80,40,150,.12), transparent 40%),
+    #080810;
+}
+
+header {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 5px 25px rgba(189,131,255,.08);
+}
+
+.logo {
+  text-shadow: 0 0 18px rgba(189,131,255,.65);
+}
+
+.hero .badge {
+  box-shadow: 0 0 18px rgba(230,196,122,.12);
+  animation: badgeGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes badgeGlow {
+  from { box-shadow: 0 0 8px rgba(230,196,122,.1); }
+  to   { box-shadow: 0 0 22px rgba(230,196,122,.3); }
+}
+
+h1 span {
+  background: linear-gradient(90deg, #bd83ff, #f1d5ff, #e6c47a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.card {
+  box-shadow: 0 10px 35px rgba(0,0,0,.18);
+}
+
+.card:hover {
+  box-shadow: 0 12px 35px rgba(189,131,255,.15);
+}
+
+.btn {
+  transition: transform .25s ease, box-shadow .25s ease;
+  box-shadow: 0 4px 18px rgba(189,131,255,.12);
+}
+
+.btn:hover {
+  box-shadow: 0 7px 25px rgba(189,131,255,.3);
+}
+
+.section-title span {
+  text-shadow: 0 0 20px rgba(189,131,255,.25);
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #bd83ff;
+  box-shadow: 0 0 12px rgba(189,131,255,.2);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card {
+    animation: riseIn .6s ease both;
+  }
+
+  @keyframes riseIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+</style>
+<link rel="stylesheet" href="pricing-style.css"></head>
+<body>
+
+<header>
+  <a class="logo" href="#home">✦ AI NERMEEN</a>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <span class="badge">CREATIVITY · TECHNOLOGY · FUTURE</span>
+  <h1>Ideas Into<br><span>Digital Magic.</span></h1>
+  <p>Welcome to AI Nermeen Mansour — a creative space for modern design, AI-powered ideas and digital experiences.</p>
+  <div class="buttons">
+    <a class="btn" href="#services">Explore Services ↗</a>
+    <a class="btn secondary" href="#contact">Let's Connect</a>
+  </div>
+</section>
+
+<section id="about">
+  <h2 class="section-title">About <span>Us</span></h2>
+  <p class="subtitle">A little creativity can make a big difference.</p>
+  <div class="about">
+    We believe in combining imagination and technology to create meaningful digital experiences. Explore our creative services and discover new possibilities.
+  </div>
+</section>
+
+<section id="services">
+  <h2 class="section-title">Our <span>Services</span></h2>
+  <p class="subtitle">Creative solutions for a digital world.</p>
+  <div class="grid">
+    <article class="card">
+      <div class="icon">🤖</div>
+      <h3>AI Creativity</h3>
+      <p>Creative concepts and AI-assisted digital ideas for your next project.</p>
+    </article>
+    <article class="card">
+      <div class="icon">🎬</div>
+      <h3>Video Content</h3>
+      <p>Short-video concepts, storytelling and engaging content planning.</p>
+    </article>
+    <article class="card">
+      <div class="icon">🎨</div>
+      <h3>Digital Design</h3>
+      <p>Modern visual concepts, layouts and polished digital experiences.</p>
+    </article>
+    <article class="card">
+      <div class="icon">💡</div>
+      <h3>Creative Ideas</h3>
+      <p>Fresh ideas to help turn your imagination into a real project.</p>
+    </article>
+  </div>
+</section>
+
+<section id="projects">
+  <h2 class="section-title">Featured <span>Projects</span></h2>
+  <p class="subtitle">A space for ideas in progress and future creations.</p>
+  <div class="grid">
+    <article class="card project">
+      <div class="icon">🌌</div>
+      <h3>AI Visual Studio</h3>
+      <p>Exploring creative visuals and digital art concepts.</p>
+    </article>
+    <article class="card project">
+      <div class="icon">📽️</div>
+      <h3>Story to Video</h3>
+      <p>Transforming stories into engaging short-video plans.</p>
+    </article>
+    <article class="card project">
+      <div class="icon">✨</div>
+      <h3>Digital Universe</h3>
+      <p>Building new digital experiences through imagination.</p>
+    </article>
+  </div>
+</section>
+
+<section id="contact">
+  <h2 class="section-title">Let's <span>Connect</span></h2>
+  <p class="subtitle">Have an idea? Send a message.</p>
+  <div class="contact-box">
+    <form id="contactForm">
+      <label for="name">Your name</label>
+      <input id="name" name="name" placeholder="Enter your name" required>
+      <label for="email">Your email</label>
+      <input id="email" name="email" type="email" placeholder="you@example.com" required>
+      <label for="message">Your message</label>
+      <textarea id="message" name="message" placeholder="Tell us about your idea..." required></textarea>
+      <button class="btn" type="submit" style="margin-top:18px">Prepare Email ↗</button>
+    </form>
+    <p style="color:var(--muted);font-size:12px;margin-top:12px">
+      This form prepares an email on your device; it does not send messages directly.
+    </p>
+  </div>
+</section>
+
+<footer>
+  © <span id="year"></span> AI Nermeen Mansour · Made with creativity ✦
+</footer>
+
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+document.getElementById("contactForm").addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+
+  const businessEmail = "YOUR_EMAIL@example.com";
+
+  if (businessEmail === "YOUR_EMAIL@example.com") {
+    alert("Website design is working! Contact form ko active karne ke liye code mein apna business email set karna hoga.");
+    return;
+  }
+
+  const subject = encodeURIComponent("Website message from " + name);
+  const body = encodeURIComponent("From: " + name + "\nEmail: " + email + "\n\n" + message);
+  window.location.href = "mailto:" + businessEmail + "?subject=" + subject + "&body=" + body;
+});
+</script>
+
+
+<section id="visual-gallery" class="section">
+  <div class="container">
+    <p class="eyebrow">OUR CREATIVE WORLD</p>
+    <h2>Ideas Into <span>Visual Stories</span></h2>
+    <p class="section-intro">Creative visuals designed to make your brand stand out.</p>
+
+    <div class="visual-gallery-grid">
+      <article class="visual-tile visual-one">
+        <div class="visual-caption">
+          <span>01 / BRANDING</span>
+          <h3>Make Your Mark</h3>
+        </div>
+      </article>
+      <article class="visual-tile visual-two">
+        <div class="visual-caption">
+          <span>02 / DIGITAL DESIGN</span>
+          <h3>Think Different</h3>
+        </div>
+      </article>
+      <article class="visual-tile visual-three">
+        <div class="visual-caption">
+          <span>03 / CREATIVE CONTENT</span>
+          <h3>Tell Your Story</h3>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+<style>
+.visual-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.visual-tile {
+  min-height: 300px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 12px 35px rgba(0,0,0,.12);
+  transition: transform .25s ease;
+}
+.visual-tile:hover { transform: translateY(-6px); }
+.visual-one {
+  background-image: linear-gradient(0deg,rgba(0,0,0,.78),transparent 70%),url('https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=900&q=85');
+}
+.visual-two {
+  background-image: linear-gradient(0deg,rgba(0,0,0,.78),transparent 70%),url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=900&q=85');
+}
+.visual-three {
+  background-image: linear-gradient(0deg,rgba(0,0,0,.78),transparent 70%),url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=85');
+}
+.visual-caption {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 22px;
+  color: white;
+}
+.visual-caption span {
+  font-size: 11px;
+  letter-spacing: 2px;
+}
+.visual-caption h3 {
+  font-size: 24px;
+  margin: 8px 0 0;
+}
+@media(max-width:700px) {
+  .visual-gallery-grid { grid-template-columns: 1fr; }
+  .visual-tile { min-height: 260px; }
+}
+</style>
+
+
+<a id="whatsapp-float"
+   href="https://wa.me/918797187037"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Chat with us on WhatsApp">
+  <span class="wa-icon">☏</span>
+  <span>Chat on WhatsApp</span>
+</a>
+
+<style>
+#whatsapp-float {
+  position: fixed;
+  right: 18px;
+  bottom: 20px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 19px;
+  border-radius: 50px;
+  background: #25D366;
+  color: #fff;
+  text-decoration: none;
+  font: 600 14px Arial, sans-serif;
+  box-shadow: 0 7px 24px rgba(0,0,0,.2);
+  transition: transform .2s ease;
+}
+#whatsapp-float:hover {
+  transform: translateY(-3px);
+}
+#whatsapp-float .wa-icon {
+  font-size: 23px;
+  line-height: 1;
+}
+</style>
+
+<section id="pricing-section"><h2>Our Services &amp; Pricing</h2><div><h3>Social Media Design</h3><p>Custom Quote</p></div><div><h3>Brand Identity</h3><p>Custom Quote</p></div><div><h3>Creative Content</h3><p>Custom Quote</p></div><a href="https://wa.me/918797187037">Contact on WhatsApp</a></section>
+</body>
+</html>
