@@ -1,18 +1,33 @@
 #pricing-section {
-    padding: 70px 20px;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 65px 20px;
     text-align: center;
-    background: linear-gradient(135deg, #0b0b14, #17132b, #0b0b14);
     color: #ffffff;
+    background:
+        radial-gradient(ellipse at top, rgba(139, 92, 246, 0.14), transparent 60%),
+        linear-gradient(135deg, #0b0b14, #17132b, #0b0b14);
 }
 
 #pricing-section h2 {
     font-size: clamp(28px, 5vw, 42px);
-    margin-bottom: 40px;
+    margin: 0 0 18px;
     color: #ffffff;
     letter-spacing: 1px;
 }
 
-#pricing-section div {
+#pricing-section > p {
+    max-width: 650px;
+    margin: 0 auto 32px;
+    color: #c9c2da;
+    line-height: 1.8;
+}
+
+#pricing-section {
+    display: block;
+}
+
+#pricing-section > div {
     box-sizing: border-box;
     width: 100%;
     max-width: 500px;
@@ -26,7 +41,7 @@
                 box-shadow 0.25s ease;
 }
 
-#pricing-section div:hover {
+#pricing-section > div:hover {
     transform: translateY(-5px);
     border-color: #c4b5fd;
     box-shadow: 0 16px 40px rgba(139, 92, 246, 0.18);
@@ -35,7 +50,7 @@
 #pricing-section h3 {
     color: #c4b5fd;
     font-size: 23px;
-    margin-bottom: 15px;
+    margin: 0 0 15px;
 }
 
 #pricing-section p {
@@ -66,14 +81,14 @@
         padding: 45px 15px;
     }
 
-    #pricing-section div {
+    #pricing-section > div {
         padding: 24px 18px;
         border-radius: 18px;
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    #pricing-section div,
+    #pricing-section > div,
     #pricing-section a {
         transition: none;
     }
