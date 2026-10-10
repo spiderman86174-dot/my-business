@@ -382,16 +382,19 @@ input:focus, textarea:focus {
       <div class="icon">🤖</div>
       <h3>AI Creativity</h3>
       <p>Creative concepts and AI-assisted digital ideas for your next project.</p>
+      <a class="project-link" href="#contact">View Project ↗</a>
     </article>
     <article class="card">
       <div class="icon">🎬</div>
       <h3>Video Content</h3>
       <p>Short-video concepts, storytelling and engaging content planning.</p>
+      <a class="project-link" href="#contact">View Project ↗</a>
     </article>
     <article class="card">
       <div class="icon">🎨</div>
       <h3>Digital Design</h3>
       <p>Modern visual concepts, layouts and polished digital experiences.</p>
+      <a class="project-link" href="#contact">View Project ↗</a>
     </article>
     <article class="card">
       <div class="icon">💡</div>
@@ -826,3 +829,23 @@ document.getElementById("contactForm").addEventListener("submit", function(event
 }
 </style>
 
+
+<style>
+/* PREMIUM VIEW PROJECT BUTTONS */
+#projects .project-link {
+  display: inline-block;
+  margin-top: 14px;
+  padding: 10px 18px;
+  border: 1px solid #e6c47a;
+  border-radius: 30px;
+  color: #e6c47a;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all .25s ease;
+}
+#projects .project-link:hover {
+  background: #e6c47a;
+  color: #15111f;
+  transform: translateY(-2px);
+}
+</style>
