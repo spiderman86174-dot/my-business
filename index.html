@@ -578,6 +578,135 @@ document.getElementById("contactForm").addEventListener("submit", function(event
 }
 </style>
 
-<section id="pricing-section"><h2>Our Services &amp; Pricing</h2><div><h3>Social Media Design</h3><p>Custom Quote</p></div><div><h3>Brand Identity</h3><p>Custom Quote</p></div><div><h3>Creative Content</h3><p>Custom Quote</p></div><a href="https://wa.me/918797187037">Contact on WhatsApp</a></section>
+<section id="pricing-section">
+  <div class="pricing-heading">
+    <span class="pricing-badge">✦ CREATIVE STUDIO</span>
+    <h2>Our Services &amp; Pricing</h2>
+    <p>Creative solutions designed to bring your ideas to life.</p>
+  </div>
+
+  <div class="pricing-grid">
+
+    <article class="pricing-card">
+      <div class="pricing-icon">🎨</div>
+      <h3>Social Media Design</h3>
+      <p>Eye-catching social media graphics for posts, promotions and digital campaigns.</p>
+      <div class="pricing-price">Custom Quote</div>
+      <a href="https://wa.me/918797187037?text=Hi%2C%20I%27m%20interested%20in%20Social%20Media%20Design."
+         target="_blank" rel="noopener">Discuss Your Project ↗</a>
+    </article>
+
+    <article class="pricing-card">
+      <div class="pricing-icon">💎</div>
+      <h3>Brand Identity</h3>
+      <p>Creative logo concepts, brand colours and visual ideas to help your brand stand out.</p>
+      <div class="pricing-price">Custom Quote</div>
+      <a href="https://wa.me/918797187037?text=Hi%2C%20I%27m%20interested%20in%20Brand%20Identity."
+         target="_blank" rel="noopener">Discuss Your Project ↗</a>
+    </article>
+
+    <article class="pricing-card">
+      <div class="pricing-icon">✨</div>
+      <h3>Creative Content</h3>
+      <p>Fresh content ideas, digital visuals and creative concepts for your next project.</p>
+      <div class="pricing-price">Custom Quote</div>
+      <a href="https://wa.me/918797187037?text=Hi%2C%20I%27m%20interested%20in%20Creative%20Content."
+         target="_blank" rel="noopener">Discuss Your Project ↗</a>
+    </article>
+
+  </div>
+
+  <p class="pricing-note">
+    Every project is unique. Contact us to discuss your requirements and receive a quote.
+  </p>
+</section>
+
+<style>
+#pricing-section {
+  padding: 55px 20px;
+  color: #f8f5ff;
+  font-family: Arial, sans-serif;
+}
+#pricing-section .pricing-heading {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 38px;
+}
+#pricing-section .pricing-badge {
+  color: #d0a6ff;
+  letter-spacing: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}
+#pricing-section h2 {
+  font-size: clamp(28px, 6vw, 42px);
+  margin: 16px 0;
+}
+#pricing-section .pricing-heading > p,
+#pricing-section .pricing-card > p,
+#pricing-section .pricing-note {
+  color: #c9c2da;
+  line-height: 1.7;
+}
+#pricing-section .pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+  gap: 22px;
+  max-width: 1050px;
+  margin: auto;
+}
+#pricing-section .pricing-card {
+  box-sizing: border-box;
+  padding: 30px 22px;
+  border: 1px solid #8060ad;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #211a35, #11101c);
+  text-align: center;
+  transition: transform .25s ease, border-color .25s ease;
+}
+#pricing-section .pricing-card:hover {
+  transform: translateY(-5px);
+  border-color: #d0a6ff;
+}
+#pricing-section .pricing-icon {
+  font-size: 35px;
+}
+#pricing-section .pricing-card h3 {
+  color: #d0b3ff;
+  font-size: 23px;
+  line-height: 1.35;
+  margin: 18px 0 12px;
+}
+#pricing-section .pricing-price {
+  margin: 22px 0;
+  color: #f0d59b;
+  font-size: 19px;
+  font-weight: bold;
+}
+#pricing-section .pricing-card a {
+  display: inline-block;
+  padding: 13px 17px;
+  border-radius: 30px;
+  background: #bd83ff;
+  color: #160d25;
+  text-decoration: none;
+  font-weight: bold;
+}
+#pricing-section .pricing-card a:hover {
+  background: #d7b5ff;
+}
+#pricing-section .pricing-note {
+  max-width: 700px;
+  margin: 30px auto 0;
+  text-align: center;
+  font-size: 14px;
+}
+@media (prefers-reduced-motion: reduce) {
+  #pricing-section .pricing-card {
+    transition: none;
+  }
+}
+</style>
+
 </body>
 </html>
