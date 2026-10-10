@@ -219,3 +219,51 @@
         transform: none;
     }
 }
+
+/* BUSINESS UPGRADE: pricing cards */
+#pricing-section .pricing-heading h2 {
+    letter-spacing: -0.6px;
+    line-height: 1.2;
+}
+
+#pricing-section .pricing-heading > p {
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+#pricing-section .pricing-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+#pricing-section .pricing-card > p {
+    flex-grow: 1;
+}
+
+#pricing-section .pricing-price {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid rgba(230, 196, 122, .28);
+    border-radius: 999px;
+    background: rgba(230, 196, 122, .07);
+}
+
+#pricing-section .pricing-card a {
+    margin-top: 8px;
+}
+
+#pricing-section .pricing-note {
+    padding: 14px 18px;
+    border: 1px solid rgba(189, 131, 255, .16);
+    border-radius: 16px;
+    background: rgba(189, 131, 255, .045);
+}
+
+@media (max-width: 600px) {
+    #pricing-section .pricing-card {
+        height: auto;
+    }
+}
