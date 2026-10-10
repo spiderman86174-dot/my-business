@@ -710,3 +710,79 @@ document.getElementById("contactForm").addEventListener("submit", function(event
 
 </body>
 </html>
+
+<style>
+/* PREMIUM PROJECT CARD UPGRADE */
+#projects .project {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(189, 131, 255, 0.3);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at top right, rgba(189,131,255,.13), transparent 65%),
+    linear-gradient(145deg, #211a35, #10101b);
+  box-shadow: 0 12px 32px rgba(0,0,0,.2);
+  transition: transform .25s ease, border-color .25s ease,
+              box-shadow .25s ease;
+}
+
+#projects .project::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  width: 76%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #e6c47a, #bd83ff, transparent);
+  pointer-events: none;
+}
+
+#projects .project .icon {
+  display: inline-grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  margin-bottom: 12px;
+  border: 1px solid rgba(230,196,122,.25);
+  border-radius: 20px;
+  background: rgba(189,131,255,.08);
+  font-size: 34px;
+}
+
+#projects .project h3 {
+  color: #e6c47a;
+  line-height: 1.4;
+}
+
+#projects .project p {
+  color: #c9c2da;
+  line-height: 1.8;
+}
+
+#projects .project:hover {
+  transform: translateY(-6px);
+  border-color: rgba(230,196,122,.7);
+  box-shadow: 0 18px 40px rgba(189,131,255,.13);
+}
+
+@media (max-width: 600px) {
+  #projects .project {
+    border-radius: 19px;
+  }
+
+  #projects .project:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #projects .project {
+    transition: none;
+  }
+
+  #projects .project:hover {
+    transform: none;
+  }
+}
+</style>
