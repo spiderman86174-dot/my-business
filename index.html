@@ -404,6 +404,13 @@ input:focus, textarea:focus {
 <section id="projects">
   <h2 class="section-title">Featured <span>Projects</span></h2>
   <p class="subtitle">A space for ideas in progress and future creations.</p>
+  <div class="featured-showcase">
+    <img src="images/featured-projects.png"
+         alt="AI Nermeen Mansour creative project showcase"
+         loading="lazy">
+    <p>One vision. Endless creative possibilities.</p>
+  </div>
+
   <div class="grid">
     <article class="card project">
       <div class="icon">🌌</div>
@@ -786,3 +793,36 @@ document.getElementById("contactForm").addEventListener("submit", function(event
   }
 }
 </style>
+
+
+<style>
+/* FEATURED PROJECT SHOWCASE BANNER */
+#projects .featured-showcase {
+  max-width: 950px;
+  margin: 28px auto 34px;
+  text-align: center;
+}
+#projects .featured-showcase img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 22px;
+  border: 1px solid rgba(189,131,255,.45);
+  box-shadow: 0 12px 38px rgba(0,0,0,.3);
+}
+#projects .featured-showcase p {
+  margin: 12px 0 0;
+  color: #e6c47a;
+  font-size: .95rem;
+  letter-spacing: .5px;
+}
+@media (max-width: 600px) {
+  #projects .featured-showcase {
+    margin: 20px auto 26px;
+  }
+  #projects .featured-showcase img {
+    border-radius: 14px;
+  }
+}
+</style>
+
