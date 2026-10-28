@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#180b2b">
+<title>A Little Love Surprise 💜</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  text-align:center;
+  background:linear-gradient(145deg,#180b2b,#521b58,#a33165);
+  padding:24px 14px;
+}
+.card{
+  max-width:480px;
+  margin:25px auto;
+  padding:28px 20px;
+  background:#ffffff14;
+  border:1px solid #ffffff35;
+  border-radius:24px;
+  box-shadow:0 15px 45px #0004;
+}
+h1{font-size:2rem}
+p{line-height:1.7;color:#f6eafa}
+input,select,button{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  border:0;
+  border-radius:12px;
+  font-size:16px;
+}
+input,select{background:#fff;color:#24132e}
+button{
+  background:#ffd1e7;
+  color:#45153c;
+  font-weight:bold;
+  cursor:pointer;
+}
+.secondary{background:#e1c9ff}
+#surprise{display:none}
+.heart{
+  position:fixed;
+  bottom:-30px;
+  animation:floatUp 6s linear infinite;
+  pointer-events:none;
+}
+@keyframes floatUp{
+  to{transform:translateY(-110vh) rotate(25deg);opacity:0}
+}
+.small{font-size:13px;color:#ead9f3}
+</style>
+</head>
+
+<body>
+<div class="card">
+  <div style="font-size:42px">💌 💗 ✨</div>
+  <h1>A Little Love Surprise</h1>
+  <p>Create a sweet, personalized surprise for someone special.</p>
+
+  <section id="creator">
+    <input id="name" maxlength="50"
+      placeholder="Enter your girlfriend's name">
+
+    <select id="music">
+      <option value="soft">Soft romantic tones</option>
+      <option value="dreamy">Dreamy music box</option>
+      <option value="bright">Happy celebration tones</option>
+    </select>
+
+    <button onclick="makeLink()">Create Surprise Link 💝</button>
+    <p class="small">The music is generated in this page; no song download is needed.</p>
+  </section>
+
+  <section id="surprise">
+    <h2 id="greeting"></h2>
+    <p>
+      Someone made this little page just to bring a smile to your face.
+      You are special, and you deserve kindness, happiness and beautiful moments. 💜
+    </p>
+
+    <button onclick="toggleMusic()" id="playBtn">▶ Play music</button>
+    <button class="secondary" onclick="shareLink()">Share this surprise 💌</button>
+    <button class="secondary" onclick="copyLink()">Copy surprise link</button>
+    <p class="small">If music doesn't start, tap Play. Browsers may block automatic audio.</p>
+  </section>
+  <p id="status" class="small"></p>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const recipient = params.get("to");
+const selectedMusic = params.get("music") || "soft";
+let audioContext = null;
+let timer = null;
+let noteIndex = 0;
+
+function safeName(value){
+  return (value || "").trim().slice(0,50);
+}
+
+function showSurprise(name){
+  document.getElementById("creator").style.display = "none";
+  document.getElementById("surprise").style.display = "block";
+  document.getElementById("greeting").textContent =
+    "A special surprise for " + name + " 💗";
+  document.title = "A Surprise for " + name;
+}
+
+function makeLink(){
+  const name = safeName(document.getElementById("name").value);
+  const music = document.getElementById("music").value;
+  if(!name){
+    document.getElementById("status").textContent =
+      "Please enter a name first.";
+    return;
+  }
+  const url = new URL(location.href);
+  url.searchParams.set("to",name);
+  url.searchParams.set("music",music);
+  history.replaceState({}, "", url);
+  showSurprise(name);
+  document.getElementById("status").textContent =
+    "Your personalized surprise is ready to share.";
+}
+
+function shareLink(){
+  const data = {title:document.title,text:"I made a little surprise for you 💗",url:location.href};
+  if(navigator.share){
+    navigator.share(data).catch(()=>{});
+  } else {
+    copyLink();
+  }
+}
+
+async function copyLink(){
+  try{
+    await navigator.clipboard.writeText(location.href);
+    document.getElementById("status").textContent = "Link copied!";
+  }catch(e){
+    document.getElementById("status").textContent =
+      "Copy the page link from your browser's address bar.";
+  }
+}
+
+function toggleMusic(){
+  if(timer){
+    clearInterval(timer);
+    timer = null;
+    document.getElementById("playBtn").textContent = "▶ Play music";
+    return;
+  }
+
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if(!AudioCtx){
+    document.getElementById("status").textContent =
+      "This browser does not support generated audio.";
+    return;
+  }
+
+  audioContext = audioContext || new AudioCtx();
+  audioContext.resume();
+
+  const scales = {
+    soft:[261.63,329.63,392,329.63,293.66,349.23,392,349.23],
+    dreamy:[523.25,659.25,783.99,659.25,587.33,698.46,783.99,698.46],
+    bright:[392,493.88,587.33,493.88,440,523.25,659.25,523.25]
+  };
+  const notes = scales[params.get("music") || selectedMusic] || scales.soft;
+
+  timer = setInterval(()=>{
+    const osc = audioContext.createOscillator();
+    const gain = audioContext.createGain();
+    osc.type = "sine";
+    osc.frequency.value = notes[noteIndex++ % notes.length];
+    gain.gain.setValueAtTime(0.0001,audioContext.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.12,audioContext.currentTime+0.04);
+    gain.gain.exponentialRampToValueAtTime(0.0001,audioContext.currentTime+0.5);
+    osc.connect(gain);
+    gain.connect(audioContext.destination);
+    osc.start();
+    osc.stop(audioContext.currentTime+0.52);
+  },520);
+
+  document.getElementById("playBtn").textContent = "⏸ Pause music";
+}
+
+if(recipient){
+  document.getElementById("name").value = recipient;
+  document.getElementById("music").value = selectedMusic;
+  showSurprise(recipient);
+}
+
+for(let i=0;i<12;i++){
+  const el=document.createElement("span");
+  el.className="heart";
+  el.textContent=["💗","✨","💜"][i%3];
+  el.style.left=(Math.random()*100)+"%";
+  el.style.animationDelay=(Math.random()*6)+"s";
+  el.style.fontSize=(16+Math.random()*18)+"px";
+  document.body.appendChild(el);
+}
+</script>
+</body>
+</html>
