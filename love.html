@@ -136,23 +136,60 @@ function makeLink(){
     "Your personalized surprise is ready to share.";
 }
 
-function shareLink(){
-  const data = {title:document.title,text:"I made a little surprise for you 💗",url:location.href};
-  if(navigator.share){
-    navigator.share(data).catch(()=>{});
-  } else {
-    copyLink();
+async function shareLink(){
+  const data = {
+    title: document.title,
+    text: "I made a little surprise for you 💗",
+    url: location.href
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(data);
+      document.getElementById("status").textContent = "Share opened successfully.";
+      return;
+    } catch (e) {
+      if (e.name === "AbortError") {
+        document.getElementById("status").textContent = "Sharing cancelled.";
+        return;
+      }
+    }
   }
+
+  await copyLink();
 }
 
 async function copyLink(){
-  try{
-    await navigator.clipboard.writeText(location.href);
-    document.getElementById("status").textContent = "Link copied!";
-  }catch(e){
-    document.getElementById("status").textContent =
-      "Copy the page link from your browser's address bar.";
-  }
+  const status = document.getElementById("status");
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(location.href);
+      status.textContent = "Link copied! 💗";
+      return;
+    }
+  } catch (e) {}
+
+  try {
+    const field = document.createElement("textarea");
+    field.value = location.href;
+    field.style.position = "fixed";
+    field.style.left = "-9999px";
+    document.body.appendChild(field);
+    field.focus();
+    field.select();
+
+    const copied = document.execCommand("copy");
+    field.remove();
+
+    if (copied) {
+      status.textContent = "Link copied! 💗";
+      return;
+    }
+  } catch (e) {}
+
+  window.prompt("Copy your surprise link:", location.href);
+  status.textContent = "If the link box appeared, copy the link from it.";
 }
 
 function toggleMusic(){
