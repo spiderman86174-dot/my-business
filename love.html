@@ -100,7 +100,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
         aria-label="Choose memory photos">
       <p id="memoryStatus" class="small" aria-live="polite">No photos selected yet.</p>
       <div id="memoryGallery" class="memory-grid"></div>
-      <p class="small">Private preview: photos stay in this browser and are not uploaded or added to the shared link.</p>
+      <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
     </section>
 
     <button onclick="makeLink()">Create Surprise Link 💝</button>
@@ -108,6 +108,12 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
   </section>
 
   <section id="surprise">
+    <section id="sharedMemories" style="display:none" aria-labelledby="sharedMemoryHeading">
+      <h2 id="sharedMemoryHeading">📸 Shared Photo Memories</h2>
+      <div id="sharedMemoryGallery" class="memory-grid"></div>
+    </section>
+
+
     <h2 id="greeting"></h2>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
@@ -198,6 +204,11 @@ function makeLink(){
     return;
   }
 
+  if (window.memoryUploadsInProgress) {
+    document.getElementById("status").textContent =
+      "Please wait until photo uploads finish.";
+    return;
+  }
   const url = new URL(location.href);
   url.searchParams.set("to",name);
   url.searchParams.set("music",music);
@@ -206,6 +217,13 @@ function makeLink(){
     url.searchParams.set("message",message);
   }else{
     url.searchParams.delete("message");
+  }
+
+  const photos = window.sharedMemoryPhotos || [];
+  if (photos.length) {
+    url.searchParams.set("photos", JSON.stringify(photos));
+  } else {
+    url.searchParams.delete("photos");
   }
 
   history.replaceState({}, "", url);
@@ -349,80 +367,163 @@ function toggleMusic(){
 }
 
 
-// Photo Memories: local-only previews; no photo upload.
+// Cloudinary Photo Memories and shared gallery.
+window.sharedMemoryPhotos = [];
+window.memoryUploadsInProgress = false;
 (function setupMemoryGallery(){
   const picker = document.getElementById("memoryPhotos");
   const gallery = document.getElementById("memoryGallery");
   const status = document.getElementById("memoryStatus");
   if (!picker || !gallery || !status) return;
 
-  let memories = [];
-  function renderMemories(){
-    gallery.replaceChildren();
-    memories.forEach((memory, index) => {
+  const query = new URLSearchParams(location.search);
+  if (query.has("to")) {
+    picker.hidden = true;
+    const recipientGallery = document.getElementById("sharedMemoryGallery");
+    const sharedSection = document.getElementById("sharedMemories");
+    sharedSection.style.display = "block";
+    let photos = [];
+    try {
+      photos = JSON.parse(query.get("photos") || "[]");
+      if (!Array.isArray(photos)) photos = [];
+    } catch (e) { photos = []; }
+
+    recipientGallery.replaceChildren();
+    photos.slice(0, 12).forEach((photo, i) => {
+      if (!photo || typeof photo.url !== "string" ||
+          !photo.url.startsWith("https://res.cloudinary.com/")) return;
       const card = document.createElement("div");
       card.className = "memory-item";
-
       const img = document.createElement("img");
-      img.src = memory.url;
-      img.alt = memory.caption || ("Memory photo " + (index + 1));
+      img.src = photo.url;
+      img.alt = String(photo.caption || ("Memory photo " + (i + 1))).slice(0, 80);
+      img.loading = "lazy";
+      card.appendChild(img);
+      if (photo.caption) {
+        const cap = document.createElement("p");
+        cap.className = "small";
+        cap.textContent = String(photo.caption).slice(0, 80);
+        card.appendChild(cap);
+      }
+      recipientGallery.appendChild(card);
+    });
+    status.textContent = recipientGallery.children.length
+      ? "Shared photo memories 💗" : "No shared photos in this link.";
+    return;
+  }
+
+  let memories = [];
+  function syncPhotos() {
+    window.sharedMemoryPhotos = memories
+      .filter(m => m.uploaded)
+      .map(m => ({url: m.url, caption: m.caption.slice(0, 80)}));
+  }
+
+  function render() {
+    gallery.replaceChildren();
+    memories.forEach((m, i) => {
+      const card = document.createElement("div");
+      card.className = "memory-item";
+      const img = document.createElement("img");
+      img.src = m.url;
+      img.alt = m.caption || ("Memory photo " + (i + 1));
       card.appendChild(img);
 
-      const caption = document.createElement("input");
-      caption.type = "text";
-      caption.maxLength = 80;
-      caption.placeholder = "Add a caption 💜";
-      caption.setAttribute("aria-label", "Caption for photo " + (index + 1));
-      caption.value = memory.caption;
-      caption.addEventListener("input", () => {
-        memory.caption = caption.value;
-        img.alt = caption.value || ("Memory photo " + (index + 1));
+      const cap = document.createElement("input");
+      cap.type = "text";
+      cap.maxLength = 80;
+      cap.placeholder = "Add a caption 💜";
+      cap.setAttribute("aria-label", "Caption for photo " + (i + 1));
+      cap.value = m.caption;
+      cap.addEventListener("input", () => {
+        m.caption = cap.value;
+        img.alt = m.caption || ("Memory photo " + (i + 1));
+        syncPhotos();
       });
-      card.appendChild(caption);
+      card.appendChild(cap);
 
       const remove = document.createElement("button");
       remove.type = "button";
       remove.className = "secondary";
       remove.textContent = "Remove photo";
       remove.addEventListener("click", () => {
-        URL.revokeObjectURL(memory.url);
-        memories.splice(index, 1);
-        renderMemories();
+        if (m.url.startsWith("blob:")) URL.revokeObjectURL(m.url);
+        memories = memories.filter(item => item !== m);
+        syncPhotos();
+        render();
       });
       card.appendChild(remove);
+
+      const label = document.createElement("p");
+      label.className = "small";
+      label.textContent = m.uploaded ? "Uploaded ✓" : "Uploading…";
+      card.appendChild(label);
       gallery.appendChild(card);
     });
-
-    status.textContent = memories.length
-      ? memories.length + " photo(s) selected."
-      : "No photos selected yet.";
+    if (!window.memoryUploadsInProgress) {
+      status.textContent = memories.length
+        ? memories.filter(m => m.uploaded).length + "/" + memories.length + " photo(s) uploaded."
+        : "No photos selected yet.";
+    }
   }
 
-  picker.addEventListener("change", () => {
+  picker.addEventListener("change", async () => {
     const files = Array.from(picker.files || []);
-    const available = Math.max(0, 12 - memories.length);
-    const chosen = files.filter(file => file.type.startsWith("image/")).slice(0, available);
-
-    chosen.forEach(file => {
-      memories.push({
-        url: URL.createObjectURL(file),
-        caption: "",
-        name: file.name
-      });
-    });
-
-    if (files.length > available) {
-      status.textContent = "Maximum 12 photos. Added " + chosen.length + " photo(s).";
-    }
-    renderMemories();
     picker.value = "";
+    const room = Math.max(0, 12 - memories.length);
+    const chosen = files.filter(f => f.type.startsWith("image/") &&
+      f.size > 0 && f.size <= 8 * 1024 * 1024).slice(0, room);
+
+    if (!chosen.length) {
+      status.textContent = "Choose images up to 8 MB each. Maximum 12 photos.";
+      return;
+    }
+
+    window.memoryUploadsInProgress = true;
+    let uploaded = 0;
+    for (const file of chosen) {
+      const m = {url: URL.createObjectURL(file), caption: "", uploaded: false};
+      memories.push(m);
+      render();
+      status.textContent = "Uploading photo " + (uploaded + 1) + " of " + chosen.length + "…";
+      try {
+        const data = new FormData();
+        data.append("file", file);
+        data.append("upload_preset", "love_gallery");
+        const response = await fetch(
+          "https://api.cloudinary.com/v1_1/ijhefpyg/image/upload",
+          {method: "POST", body: data}
+        );
+        const result = await response.json();
+        if (!response.ok || !result.secure_url) {
+          throw new Error(result.error?.message || "Upload failed");
+        }
+        URL.revokeObjectURL(m.url);
+        m.url = result.secure_url;
+        m.uploaded = true;
+        uploaded++;
+        syncPhotos();
+        render();
+      } catch (e) {
+        if (m.url.startsWith("blob:")) URL.revokeObjectURL(m.url);
+        memories = memories.filter(item => item !== m);
+        syncPhotos();
+        render();
+        status.textContent = "Upload failed: " + (e.message || "Check Cloudinary preset.");
+      }
+    }
+    window.memoryUploadsInProgress = false;
+    syncPhotos();
+    render();
+    if (uploaded) status.textContent = uploaded + " photo(s) uploaded. You can create the link now.";
   });
 
   window.addEventListener("pagehide", () => {
-    memories.forEach(memory => URL.revokeObjectURL(memory.url));
-  }, { once: true });
+    memories.forEach(m => {
+      if (m.url.startsWith("blob:")) URL.revokeObjectURL(m.url);
+    });
+  }, {once: true});
 })();
-
 if(recipient){
   document.getElementById("name").value = recipient;
   document.getElementById("music").value = selectedMusic;
