@@ -43,6 +43,9 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
   <section id="creator">
     <input id="name" maxlength="50"
       placeholder="Enter your girlfriend's name">
+    <textarea id="letter" maxlength="1000" rows="4"
+      placeholder="Write your personal message here 💌"
+      style="width:100%;padding:14px;border-radius:15px;margin:8px 0;font:16px Arial;resize:vertical"></textarea>
 
     <select id="music">
       <option value="soft">Soft romantic tones</option>
@@ -56,6 +59,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 
   <section id="surprise">
     <h2 id="greeting"></h2>
+    <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <p>
       Someone made this little page just to bring a smile to your face.
       You are special, and you deserve kindness, happiness and beautiful moments. 💜
@@ -95,27 +99,40 @@ function safeName(value){
   return (value || "").trim().slice(0,50);
 }
 
-function showSurprise(name){
+function showSurprise(name, message = ""){
   document.getElementById("creator").style.display = "none";
   document.getElementById("surprise").style.display = "block";
   document.getElementById("greeting").textContent =
     "A special surprise for " + name + " 💗";
+  document.getElementById("letterText").textContent = message;
+  document.getElementById("letterText").style.display =
+    message ? "block" : "none";
   document.title = "A Surprise for " + name;
 }
 
 function makeLink(){
   const name = safeName(document.getElementById("name").value);
   const music = document.getElementById("music").value;
+  const message = document.getElementById("letter").value.trim().slice(0,1000);
+
   if(!name){
     document.getElementById("status").textContent =
       "Please enter a name first.";
     return;
   }
+
   const url = new URL(location.href);
   url.searchParams.set("to",name);
   url.searchParams.set("music",music);
+
+  if(message){
+    url.searchParams.set("message",message);
+  }else{
+    url.searchParams.delete("message");
+  }
+
   history.replaceState({}, "", url);
-  showSurprise(name);
+  showSurprise(name,message);
   document.getElementById("status").textContent =
     "Your personalized surprise is ready to share.";
 }
@@ -184,7 +201,8 @@ function toggleMusic(){
 if(recipient){
   document.getElementById("name").value = recipient;
   document.getElementById("music").value = selectedMusic;
-  showSurprise(recipient);
+  const message = params.get("message") || "";
+  showSurprise(recipient, message);
 }
 
 for(let i=0;i<12;i++){
