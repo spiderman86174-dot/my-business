@@ -251,45 +251,79 @@ async function copyLink(){
 }
 
 function toggleMusic(){
+  const button = document.getElementById("playBtn");
+  const status = document.getElementById("status");
+
   if(timer){
     clearInterval(timer);
     timer = null;
-    document.getElementById("playBtn").textContent = "▶ Play music";
+    if(audioContext){
+      audioContext.suspend().catch(()=>{});
+    }
+    button.textContent = "▶ Play music";
+    status.textContent = "Music paused 💜";
     return;
   }
 
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
   if(!AudioCtx){
-    document.getElementById("status").textContent =
-      "This browser does not support generated audio.";
+    status.textContent = "This browser does not support generated audio.";
     return;
   }
 
-  audioContext = audioContext || new AudioCtx();
-  audioContext.resume();
+  try {
+    audioContext = audioContext || new AudioCtx();
 
-  const scales = {
-    soft:[261.63,329.63,392,329.63,293.66,349.23,392,349.23],
-    dreamy:[523.25,659.25,783.99,659.25,587.33,698.46,783.99,698.46],
-    bright:[392,493.88,587.33,493.88,440,523.25,659.25,523.25]
-  };
-  const notes = scales[params.get("music") || selectedMusic] || scales.soft;
+    const scales = {
+      soft:   [261.63,329.63,392.00,523.25,392.00,329.63,293.66,349.23],
+      dreamy: [261.63,392.00,523.25,659.25,523.25,392.00,329.63,392.00],
+      bright: [392.00,493.88,587.33,659.25,587.33,493.88,440.00,523.25]
+    };
 
-  timer = setInterval(()=>{
-    const osc = audioContext.createOscillator();
-    const gain = audioContext.createGain();
-    osc.type = "sine";
-    osc.frequency.value = notes[noteIndex++ % notes.length];
-    gain.gain.setValueAtTime(0.0001,audioContext.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.12,audioContext.currentTime+0.04);
-    gain.gain.exponentialRampToValueAtTime(0.0001,audioContext.currentTime+0.5);
-    osc.connect(gain);
-    gain.connect(audioContext.destination);
-    osc.start();
-    osc.stop(audioContext.currentTime+0.52);
-  },520);
+    const notes = scales[params.get("music") || selectedMusic] || scales.soft;
+    let nextNoteTime = 0;
 
-  document.getElementById("playBtn").textContent = "⏸ Pause music";
+    audioContext.resume().then(()=>{
+      if(!timer) return;
+
+      const playNextNote = () => {
+        if(!timer || !audioContext || audioContext.state !== "running") return;
+
+        const now = audioContext.currentTime;
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(notes[noteIndex % notes.length], now);
+        noteIndex++;
+
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.055, now + 0.12);
+        gain.gain.setValueAtTime(0.055, now + 0.24);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.85);
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+        osc.start(now);
+        osc.stop(now + 0.9);
+      };
+
+      playNextNote();
+      timer = setInterval(playNextNote, 650);
+    }).catch(()=>{
+      timer = null;
+      button.textContent = "▶ Play music";
+      status.textContent = "Tap Play music again to enable audio.";
+    });
+
+    timer = -1;
+    button.textContent = "⏸ Pause music";
+    status.textContent = "Playing a gentle melody 💗";
+  } catch (e) {
+    timer = null;
+    button.textContent = "▶ Play music";
+    status.textContent = "Could not start music. Please try again.";
+  }
 }
 
 if(recipient){
