@@ -24,7 +24,7 @@ button:active{transform:scale(.98)}
 @media(hover:hover){button:hover{filter:brightness(1.06);transform:translateY(-2px)}}
 .secondary{background:linear-gradient(110deg,#e1c9ff,#c8b4ff)}
 #surprise{display:none}
-.heart{position:fixed;bottom:-30px;z-index:0;animation:floatUp 6s linear infinite;pointer-events:none;filter:drop-shadow(0 0 8px #ffb8e6)}
+.heart{position:fixed;bottom:-40px;z-index:0;pointer-events:none;user-select:none;will-change:transform,opacity;animation:floatUp var(--duration,7s) linear forwards;filter:drop-shadow(0 0 10px #ff8ac7);opacity:0}
 @keyframes floatUp{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes glow{from{opacity:.65;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
@@ -70,6 +70,20 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 </div>
 
 <script>
+function createFloatingHeart(){
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const heart=document.createElement("span");
+  heart.className="heart";
+  heart.textContent=["💗","💖","💕","💜","✨"][Math.floor(Math.random()*5)];
+  heart.setAttribute("aria-hidden","true");
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.fontSize=(16+Math.random()*18)+"px";
+  heart.style.setProperty("--duration",(5+Math.random()*4)+"s");
+  document.body.appendChild(heart);
+  heart.addEventListener("animationend",()=>heart.remove(),{once:true});
+}
+setInterval(createFloatingHeart,650);
+</script>
 const params = new URLSearchParams(location.search);
 const recipient = params.get("to");
 const selectedMusic = params.get("music") || "soft";
