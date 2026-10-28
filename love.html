@@ -87,7 +87,6 @@ function createFloatingHeart(){
   heart.addEventListener("animationend",()=>heart.remove(),{once:true});
 }
 setInterval(createFloatingHeart,650);
-</script>
 const params = new URLSearchParams(location.search);
 const recipient = params.get("to");
 const selectedMusic = params.get("music") || "soft";
