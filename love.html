@@ -31,6 +31,34 @@ button:active{transform:scale(.98)}
 .small{font-size:13px;color:#ead9f3}
 button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+
+
+.birthday-cake{width:min(250px,80vw);margin:28px auto;text-align:center;animation:cakeFloat 3s ease-in-out infinite;filter:drop-shadow(0 8px 16px #bd80ff55)}
+.cake-message{color:#ffe0f5;font-size:17px;font-weight:bold;margin-bottom:12px;text-shadow:0 0 12px #ff80d0}
+.candles{display:flex;justify-content:center;gap:24px;height:42px}
+.candle{position:relative;display:block;width:10px;height:35px;border-radius:4px;background:repeating-linear-gradient(45deg,#fff0f7 0 5px,#ff83c8 5px 9px)}
+.candle b{position:absolute;left:0;top:-16px;width:11px;height:16px;border-radius:50% 50% 45% 45%;background:radial-gradient(#fff9b0,#ffbd55 55%,#ff70a8);box-shadow:0 0 12px #ffc86b;animation:flameFlicker .55s ease-in-out infinite alternate}
+.cake-top{position:relative;width:190px;height:26px;margin:-2px auto 0;border-radius:50%;background:linear-gradient(90deg,#ffc9ed,#fff0fb,#e9c5ff);border:2px solid #fff0fb}
+.cake-body{box-sizing:border-box;width:190px;height:57px;margin:-8px auto 0;padding-top:16px;border-radius:0 0 16px 16px;background:linear-gradient(100deg,#c28bff,#f5a7e2,#c7a0ff);color:#fff0fa;font-size:19px;border-bottom:5px solid #f9d9ff}
+.cake-plate{width:220px;height:13px;margin:auto;border-radius:50%;background:linear-gradient(#fff0ff,#d5aaff)}
+@keyframes cakeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes flameFlicker{from{transform:rotate(-7deg) scale(.92)}to{transform:rotate(7deg) scale(1.08)}}
+.birthday-particle{
+  position:fixed;
+  top:-45px;
+  z-index:2;
+  pointer-events:none;
+  user-select:none;
+  animation:birthdayFall var(--duration,6s) linear forwards;
+  will-change:transform,opacity;
+}
+@keyframes birthdayFall{
+  0%{transform:translate3d(0,-5vh,0) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translate3d(35px,110vh,0) rotate(540deg);opacity:0}
+}
+
 </style>
 </head>
 
@@ -60,6 +88,14 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
   <section id="surprise">
     <h2 id="greeting"></h2>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
+    <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
+      <div class="cake-message">Make a wish! ✨</div>
+      <div class="candles"><i class="candle"><b></b></i><i class="candle"><b></b></i><i class="candle"><b></b></i></div>
+      <div class="cake-top"></div>
+      <div class="cake-body">♥　♥　♥</div>
+      <div class="cake-plate"></div>
+    </div>
+
     <p>
       Someone made this little page just to bring a smile to your face.
       You are special, and you deserve kindness, happiness and beautiful moments. 💜
@@ -86,6 +122,25 @@ function createFloatingHeart(){
   document.body.appendChild(heart);
   heart.addEventListener("animationend",()=>heart.remove(),{once:true});
 }
+
+function createBirthdayEffects(){
+  if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const symbols = ["🌸","🌷","✨","💖","🎉","✦","🌺"];
+  for(let i=0;i<32;i++){
+    const particle = document.createElement("span");
+    particle.className = "birthday-particle";
+    particle.setAttribute("aria-hidden","true");
+    particle.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    particle.style.left = Math.random()*100 + "vw";
+    particle.style.fontSize = (14 + Math.random()*18) + "px";
+    particle.style.setProperty("--duration",(4 + Math.random()*5) + "s");
+    particle.style.animationDelay = (Math.random()*2) + "s";
+    document.body.appendChild(particle);
+    particle.addEventListener("animationend",()=>particle.remove(),{once:true});
+  }
+}
+
 setInterval(createFloatingHeart,650);
 const params = new URLSearchParams(location.search);
 const recipient = params.get("to");
@@ -107,6 +162,7 @@ function showSurprise(name, message = ""){
   document.getElementById("letterText").style.display =
     message ? "block" : "none";
   document.title = "A Surprise for " + name;
+  createBirthdayEffects();
 }
 
 function makeLink(){
