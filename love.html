@@ -137,6 +137,7 @@ function makeLink(){
 }
 
 async function shareLink(){
+  alert("Share button clicked");
   const data = {
     title: document.title,
     text: "I made a little surprise for you 💗",
@@ -160,6 +161,7 @@ async function shareLink(){
 }
 
 async function copyLink(){
+  alert("Copy button clicked");
   const status = document.getElementById("status");
 
   try {
