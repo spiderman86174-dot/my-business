@@ -59,6 +59,17 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
   100%{transform:translate3d(35px,110vh,0) rotate(540deg);opacity:0}
 }
 
+
+/* Photo Memories gallery */
+.memory-box{margin:22px 0;padding:16px;border:1px solid #ffffff35;border-radius:20px;background:#ffffff0b}
+.memory-box h2{margin:4px 0 8px}
+.memory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.memory-item{min-width:0;padding:9px;border-radius:14px;background:#ffffff12;border:1px solid #ffffff25}
+.memory-item img{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px}
+.memory-item input{width:100%;min-width:0;margin:8px 0 2px;padding:10px;font-size:14px}
+.memory-item button{min-height:42px;padding:10px;margin:6px 0 0;font-size:14px}
+.memory-empty{font-size:13px;color:#ead9f3}
+
 </style>
 </head>
 
@@ -80,6 +91,17 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
       <option value="dreamy">Dreamy music box</option>
       <option value="bright">Happy celebration tones</option>
     </select>
+
+
+    <section class="memory-box" aria-labelledby="memoryHeading">
+      <h2 id="memoryHeading">📸 Photo Memories</h2>
+      <p class="small">Choose your favourite photos and add little captions.</p>
+      <input id="memoryPhotos" type="file" accept="image/*" multiple
+        aria-label="Choose memory photos">
+      <p id="memoryStatus" class="small" aria-live="polite">No photos selected yet.</p>
+      <div id="memoryGallery" class="memory-grid"></div>
+      <p class="small">Private preview: photos stay in this browser and are not uploaded or added to the shared link.</p>
+    </section>
 
     <button onclick="makeLink()">Create Surprise Link 💝</button>
     <p class="small">The music is generated in this page; no song download is needed.</p>
@@ -325,6 +347,81 @@ function toggleMusic(){
     status.textContent = "Could not start music. Please try again.";
   }
 }
+
+
+// Photo Memories: local-only previews; no photo upload.
+(function setupMemoryGallery(){
+  const picker = document.getElementById("memoryPhotos");
+  const gallery = document.getElementById("memoryGallery");
+  const status = document.getElementById("memoryStatus");
+  if (!picker || !gallery || !status) return;
+
+  let memories = [];
+  function renderMemories(){
+    gallery.replaceChildren();
+    memories.forEach((memory, index) => {
+      const card = document.createElement("div");
+      card.className = "memory-item";
+
+      const img = document.createElement("img");
+      img.src = memory.url;
+      img.alt = memory.caption || ("Memory photo " + (index + 1));
+      card.appendChild(img);
+
+      const caption = document.createElement("input");
+      caption.type = "text";
+      caption.maxLength = 80;
+      caption.placeholder = "Add a caption 💜";
+      caption.setAttribute("aria-label", "Caption for photo " + (index + 1));
+      caption.value = memory.caption;
+      caption.addEventListener("input", () => {
+        memory.caption = caption.value;
+        img.alt = caption.value || ("Memory photo " + (index + 1));
+      });
+      card.appendChild(caption);
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "secondary";
+      remove.textContent = "Remove photo";
+      remove.addEventListener("click", () => {
+        URL.revokeObjectURL(memory.url);
+        memories.splice(index, 1);
+        renderMemories();
+      });
+      card.appendChild(remove);
+      gallery.appendChild(card);
+    });
+
+    status.textContent = memories.length
+      ? memories.length + " photo(s) selected."
+      : "No photos selected yet.";
+  }
+
+  picker.addEventListener("change", () => {
+    const files = Array.from(picker.files || []);
+    const available = Math.max(0, 12 - memories.length);
+    const chosen = files.filter(file => file.type.startsWith("image/")).slice(0, available);
+
+    chosen.forEach(file => {
+      memories.push({
+        url: URL.createObjectURL(file),
+        caption: "",
+        name: file.name
+      });
+    });
+
+    if (files.length > available) {
+      status.textContent = "Maximum 12 photos. Added " + chosen.length + " photo(s).";
+    }
+    renderMemories();
+    picker.value = "";
+  });
+
+  window.addEventListener("pagehide", () => {
+    memories.forEach(memory => URL.revokeObjectURL(memory.url));
+  }, { once: true });
+})();
 
 if(recipient){
   document.getElementById("name").value = recipient;
