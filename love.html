@@ -884,7 +884,22 @@ for(let i=0;i<12;i++){
       openingTheme.currentTime = 0;
     }
     const secondPageSong = document.getElementById("secondPageSong");
-    if (secondPageSong) {
+    const isSharedFinalPage = new URLSearchParams(location.search).has("to");
+
+    if (isSharedFinalPage) {
+      if (secondPageSong) secondPageSong.pause();
+
+      let inaamSong = document.getElementById("inaamLastPageSong");
+      if (!inaamSong) {
+        inaamSong = document.createElement("audio");
+        inaamSong.id = "inaamLastPageSong";
+        inaamSong.src = "inaam-last-page.mp3?v=inaam1";
+        inaamSong.loop = true;
+        inaamSong.preload = "auto";
+        document.body.appendChild(inaamSong);
+      }
+      inaamSong.play().catch(() => {});
+    } else if (secondPageSong) {
       secondPageSong.play().catch(() => {});
     }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
