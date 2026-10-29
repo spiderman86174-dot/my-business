@@ -287,7 +287,7 @@ body {
 <div id="cinematicIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
   <div class="intro-content">
     <div class="intro-hearts" aria-hidden="true">♡ ✦ ♥ ✦ ♡</div>
-    <h1 id="introTitle" class="intro-title">Nermeen ❤️</h1>
+    <h1 id="introTitle" class="intro-title">Your Favorite Person ❤️</h1>
     <p class="intro-caption">Some people make the whole world feel magical.<br>This little surprise is for you.</p>
     <button id="enterSurprise" type="button">Open My Surprise ✨</button>
   </div>
@@ -295,7 +295,7 @@ body {
 
 <div class="card">
   <div style="font-size:42px">💌 💗 ✨</div>
-  <h1>My Heart Has a Favorite Person…<br><span class="cinematic-name">Nermeen ❤️</span></h1>
+  <h1>My Heart Has a Favorite Person…<br><span class="cinematic-name">Your Favorite Person ❤️</span></h1>
 
 
   <section id="creator">
@@ -345,7 +345,7 @@ body {
     <h2 id="greeting"></h2>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
-      <div class="cake-message">Nermeen, You Make My World Glow ✨</div>
+      <div class="cake-message">You Make My World Glow ✨</div>
       <div class="candles"><i class="candle"><b></b></i><i class="candle"><b></b></i><i class="candle"><b></b></i></div>
       <div class="cake-top"></div>
       <div class="cake-body">♥　♥　♥</div>
@@ -405,6 +405,10 @@ function safeName(value){
 }
 
 function showSurprise(name, message = ""){
+  document.getElementById("introTitle").textContent = name + " ❤️";
+  document.querySelector(".cinematic-name").textContent = name + " ❤️";
+  document.querySelector(".cake-message").textContent =
+    name + ", You Make My World Glow ✨";
   document.getElementById("creator").style.display = "none";
   document.getElementById("surprise").style.display = "block";
   document.getElementById("greeting").textContent =
