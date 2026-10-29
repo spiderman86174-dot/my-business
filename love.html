@@ -133,7 +133,7 @@ button {
 
 
 
-/* Floating uploaded photos on the shared final page */
+/* Edge-to-edge floating uploaded photos */
 .floating-photo-layer {
   position: fixed;
   inset: 0;
@@ -143,23 +143,38 @@ button {
 }
 .floating-memory-photo {
   position: absolute;
+  left: var(--photo-left, 50vw);
+  top: var(--photo-top, 50vh);
   width: var(--photo-size, 90px);
   height: calc(var(--photo-size, 90px) * 1.28);
   object-fit: cover;
   border: 2px solid #ffe0f5;
   border-radius: 15px;
   box-shadow: 0 8px 28px #ff72c866, 0 0 18px #e9a3ff55;
-  opacity: .86;
-  animation: uploaded-photo-float var(--photo-duration, 9s) ease-in-out infinite;
+  opacity: .2;
+  filter: blur(7px);
+  animation: uploaded-photo-float var(--photo-duration, 12s) linear infinite;
   animation-delay: var(--photo-delay, 0s);
-  will-change: transform;
+  will-change: transform, opacity, filter;
 }
 @keyframes uploaded-photo-float {
-  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
-  50% { transform: translate3d(var(--photo-dx), var(--photo-dy), 0) rotate(var(--photo-rotate)); }
+  0% {
+    transform: translate3d(var(--photo-start-x), var(--photo-start-y), 0) rotate(var(--photo-start-rotate)) scale(.88);
+    opacity: .18;
+    filter: blur(7px);
+  }
+  14%, 82% {
+    opacity: .94;
+    filter: blur(0);
+  }
+  100% {
+    transform: translate3d(var(--photo-end-x), var(--photo-end-y), 0) rotate(var(--photo-end-rotate)) scale(1);
+    opacity: .18;
+    filter: blur(7px);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .floating-memory-photo { animation: none; }
+  .floating-memory-photo { animation-duration: 24s; }
 }
 
 /* Blurred uploaded-photo background */
@@ -616,13 +631,9 @@ window.memoryUploadsInProgress = false;
       photoBg.setAttribute("aria-hidden", "true");
       document.body.prepend(photoBg);
     }
-    if (validPhotos.length) {
-      photoBg.style.backgroundImage = `url("${validPhotos[0].url}")`;
-    }
 
     const floatingLayer = document.createElement("div");
     floatingLayer.className = "floating-photo-layer";
-    floatingLayer.setAttribute("aria-hidden", "true");
 
     validPhotos.forEach((photo, i) => {
       const img = document.createElement("img");
@@ -630,29 +641,41 @@ window.memoryUploadsInProgress = false;
       img.src = photo.url;
       img.alt = "";
       img.loading = "eager";
+      img.decoding = "async";
 
       const size = 65 + Math.random() * 45;
-      const side = i % 4;
-      const left = side === 0
-        ? 2 + Math.random() * 8
-        : side === 1
-          ? 84 + Math.random() * 8
-          : 15 + Math.random() * 65;
-      const top = side === 2
-        ? 2 + Math.random() * 10
-        : side === 3
-          ? 78 + Math.random() * 10
-          : 15 + Math.random() * 65;
+      const direction = i % 4;
+      const cross = 8 + Math.random() * 84;
+      const dx = "112vw";
+      const dy = "112vh";
 
-      img.style.left = `clamp(2px, ${left}vw, calc(100vw - ${size}px))`;
-      img.style.top = `clamp(2px, ${top}vh, calc(100vh - ${size * 1.28}px))`;
+      let left, top, sx, sy, ex, ey;
+
+      if (direction === 0) {
+        left = `${cross}vw`; top = "50vh";
+        sx = "0"; sy = `-${dy}`; ex = "0"; ey = dy;
+      } else if (direction === 1) {
+        left = `${cross}vw`; top = "50vh";
+        sx = "0"; sy = dy; ex = "0"; ey = `-${dy}`;
+      } else if (direction === 2) {
+        left = "50vw"; top = `${cross}vh`;
+        sx = `-${dx}`; sy = "0"; ex = dx; ey = "0";
+      } else {
+        left = "50vw"; top = `${cross}vh`;
+        sx = dx; sy = "0"; ex = `-${dx}`; ey = "0";
+      }
+
       img.style.setProperty("--photo-size", `${size}px`);
-      img.style.setProperty("--photo-dx", `${Math.random() * 70 - 35}px`);
-      img.style.setProperty("--photo-dy", `${Math.random() * 90 - 45}px`);
-      img.style.setProperty("--photo-rotate", `${Math.random() * 24 - 12}deg`);
-      img.style.setProperty("--photo-duration", `${7 + Math.random() * 8}s`);
-      img.style.setProperty("--photo-delay", `${-Math.random() * 12}s`);
-
+      img.style.setProperty("--photo-left", left);
+      img.style.setProperty("--photo-top", top);
+      img.style.setProperty("--photo-start-x", sx);
+      img.style.setProperty("--photo-start-y", sy);
+      img.style.setProperty("--photo-end-x", ex);
+      img.style.setProperty("--photo-end-y", ey);
+      img.style.setProperty("--photo-start-rotate", `${Math.random() * 30 - 15}deg`);
+      img.style.setProperty("--photo-end-rotate", `${Math.random() * 30 - 15}deg`);
+      img.style.setProperty("--photo-duration", `${10 + Math.random() * 9}s`);
+      img.style.setProperty("--photo-delay", `${-Math.random() * 18}s`);
       floatingLayer.appendChild(img);
     });
 
