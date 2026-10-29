@@ -141,6 +141,20 @@ button {
   pointer-events: none;
   z-index: 4;
 }
+.floating-photo-layer::after {
+  content: "";
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  width: 112px;
+  height: 58px;
+  transform: translateX(-50%);
+  border: 2px solid #ffe0f5;
+  border-radius: 9px;
+  background: linear-gradient(90deg, #a83bcb, #f06bbd 48%, #a83bcb);
+  box-shadow: 0 0 24px #ff72c899, inset 0 0 12px #ffffff44;
+  z-index: 5;
+}
 .floating-memory-photo {
   position: absolute;
   left: var(--photo-left, 50vw);
@@ -159,18 +173,22 @@ button {
 }
 @keyframes uploaded-photo-float {
   0% {
-    transform: translate3d(var(--photo-start-x), var(--photo-start-y), 0) rotate(var(--photo-start-rotate)) scale(.88);
-    opacity: .18;
-    filter: blur(7px);
+    transform: translate3d(0, 40vh, 0) rotate(var(--photo-start-rotate)) scale(.55);
+    opacity: 0;
+    filter: blur(8px);
   }
-  14%, 82% {
-    opacity: .94;
+  12% {
+    opacity: .95;
     filter: blur(0);
   }
+  72% {
+    opacity: .9;
+    filter: blur(1px);
+  }
   100% {
-    transform: translate3d(var(--photo-end-x), var(--photo-end-y), 0) rotate(var(--photo-end-rotate)) scale(1);
-    opacity: .18;
-    filter: blur(7px);
+    transform: translate3d(var(--photo-end-x), -115vh, 0) rotate(var(--photo-end-rotate)) scale(.8);
+    opacity: 0;
+    filter: blur(9px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -644,19 +662,16 @@ window.memoryUploadsInProgress = false;
       img.decoding = "async";
 
       const size = 65 + Math.random() * 45;
-      const cross = 5 + Math.random() * 90;
+      const drift = (Math.random() * 2 - 1) * 42;
 
       img.style.setProperty("--photo-size", `${size}px`);
-      img.style.setProperty("--photo-left", `${cross}vw`);
+      img.style.setProperty("--photo-left", "50vw");
       img.style.setProperty("--photo-top", "50vh");
-      img.style.setProperty("--photo-start-x", "0");
-      img.style.setProperty("--photo-start-y", "-112vh");
-      img.style.setProperty("--photo-end-x", "0");
-      img.style.setProperty("--photo-end-y", "112vh");
+      img.style.setProperty("--photo-end-x", `${drift}vw`);
       img.style.setProperty("--photo-start-rotate", `${Math.random() * 20 - 10}deg`);
-      img.style.setProperty("--photo-end-rotate", `${Math.random() * 20 - 10}deg`);
-      img.style.setProperty("--photo-duration", "14s");
-      img.style.setProperty("--photo-delay", `${-Math.random() * 14}s`);
+      img.style.setProperty("--photo-end-rotate", `${Math.random() * 70 - 35}deg`);
+      img.style.setProperty("--photo-duration", "6s");
+      img.style.setProperty("--photo-delay", `${i * 0.85}s`);
       floatingLayer.appendChild(img);
     });
 
