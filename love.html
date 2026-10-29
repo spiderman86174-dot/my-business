@@ -257,6 +257,28 @@ body {
   #cinematicIntro { transition: none; }
 }
 
+
+/* Golden sparkle and floating-heart celebration */
+.magic-particle {
+  position: fixed;
+  z-index: 100001;
+  pointer-events: none;
+  left: var(--x);
+  top: var(--y);
+  font-size: var(--size);
+  opacity: 0;
+  animation: magicBurst var(--duration) ease-out forwards;
+  filter: drop-shadow(0 0 8px #f5d58c);
+}
+@keyframes magicBurst {
+  0% { opacity: 0; transform: translate(0, 0) scale(.35) rotate(0deg); }
+  15% { opacity: 1; }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(1.25) rotate(var(--rot));
+  }
+}
+
 </style>
 </head>
 
@@ -912,6 +934,21 @@ for(let i=0;i<12;i++){
   const enter = document.getElementById("enterSurprise");
   if (!intro || !enter) return;
   const closeIntro = () => {
+    const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
+    for (let i = 0; i < 42; i++) {
+      const particle = document.createElement("span");
+      particle.className = "magic-particle";
+      particle.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+      particle.style.setProperty("--x", (8 + Math.random() * 84) + "vw");
+      particle.style.setProperty("--y", (18 + Math.random() * 64) + "vh");
+      particle.style.setProperty("--dx", (Math.random() * 240 - 120) + "px");
+      particle.style.setProperty("--dy", (-70 - Math.random() * 220) + "px");
+      particle.style.setProperty("--size", (14 + Math.random() * 22) + "px");
+      particle.style.setProperty("--duration", (1.2 + Math.random() * 1.4) + "s");
+      particle.style.setProperty("--rot", (Math.random() * 160 - 80) + "deg");
+      document.body.appendChild(particle);
+      particle.addEventListener("animationend", () => particle.remove(), { once: true });
+    }
     intro.classList.add("intro-hidden");
     window.setTimeout(() => intro.remove(), 1000);
   };
