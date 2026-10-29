@@ -133,7 +133,7 @@ button {
 
 
 
-/* Edge-to-edge floating uploaded photos */
+/* Uploaded photos emerge one-by-one from the gift box */
 .floating-photo-layer {
   position: fixed;
   inset: 0;
@@ -141,6 +141,7 @@ button {
   pointer-events: none;
   z-index: 4;
 }
+
 .floating-photo-layer::after {
   content: "";
   position: fixed;
@@ -155,46 +156,60 @@ button {
   box-shadow: 0 0 24px #ff72c899, inset 0 0 12px #ffffff44;
   z-index: 5;
 }
+
 .floating-memory-photo {
   position: absolute;
-  left: var(--photo-left, 50vw);
-  top: var(--photo-top, 50vh);
+  left: 50%;
+  bottom: 78px;
   width: var(--photo-size, 90px);
   height: calc(var(--photo-size, 90px) * 1.28);
   object-fit: cover;
   border: 2px solid #ffe0f5;
-  border-radius: 15px;
+  border-radius: 12px;
   box-shadow: 0 8px 28px #ff72c866, 0 0 18px #e9a3ff55;
-  opacity: .2;
-  filter: blur(7px);
-  animation: uploaded-photo-float var(--photo-duration, 12s) linear infinite;
-  animation-delay: var(--photo-delay, 0s);
-  will-change: transform, opacity, filter;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 4;
 }
-@keyframes uploaded-photo-float {
+
+.floating-memory-photo.photo-emerging {
+  animation: gift-photo-emerge 4s ease-in-out forwards;
+}
+
+@keyframes gift-photo-emerge {
   0% {
-    transform: translate3d(0, 40vh, 0) rotate(var(--photo-start-rotate)) scale(.55);
+    transform: translate(-50%, 38px) scale(.45) rotate(0deg);
     opacity: 0;
-    filter: blur(8px);
+    filter: blur(5px);
   }
   12% {
-    opacity: .95;
+    opacity: 1;
     filter: blur(0);
   }
-  72% {
-    opacity: .9;
-    filter: blur(1px);
+  82% {
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
+      scale(1) rotate(var(--photo-rotation, 0deg));
+    opacity: 1;
+    filter: blur(0);
+  }
+  96% {
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
+      scale(1) rotate(var(--photo-rotation, 0deg));
+    opacity: 1;
+    filter: blur(0);
   }
   100% {
-    transform: translate3d(var(--photo-end-x), -115vh, 0) rotate(var(--photo-end-rotate)) scale(.8);
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
+      scale(1) rotate(var(--photo-rotation, 0deg));
     opacity: 0;
-    filter: blur(9px);
+    filter: blur(5px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .floating-memory-photo { animation-duration: 24s; }
+  .floating-memory-photo.photo-emerging {
+    animation-duration: 4s;
+  }
 }
-
 /* Blurred uploaded-photo background */
 .photo-background {
   position: fixed;
@@ -653,29 +668,42 @@ window.memoryUploadsInProgress = false;
     const floatingLayer = document.createElement("div");
     floatingLayer.className = "floating-photo-layer";
 
-    validPhotos.forEach((photo, i) => {
+    const photoElements = validPhotos.map(photo => {
       const img = document.createElement("img");
       img.className = "floating-memory-photo";
       img.src = photo.url;
       img.alt = "";
       img.loading = "eager";
       img.decoding = "async";
-
-      const size = 65 + Math.random() * 45;
-      const drift = (Math.random() * 2 - 1) * 42;
-
-      img.style.setProperty("--photo-size", `${size}px`);
-      img.style.setProperty("--photo-left", "50vw");
-      img.style.setProperty("--photo-top", "50vh");
-      img.style.setProperty("--photo-end-x", `${drift}vw`);
-      img.style.setProperty("--photo-start-rotate", `${Math.random() * 20 - 10}deg`);
-      img.style.setProperty("--photo-end-rotate", `${Math.random() * 70 - 35}deg`);
-      img.style.setProperty("--photo-duration", "6s");
-      img.style.setProperty("--photo-delay", `${i * 0.85}s`);
+      img.style.setProperty("--photo-size", `${65 + Math.random() * 45}px`);
       floatingLayer.appendChild(img);
+      return img;
     });
 
     document.body.appendChild(floatingLayer);
+
+    if (photoElements.length) {
+      let currentPhoto = 0;
+
+      function showNextGiftPhoto() {
+        const img = photoElements[currentPhoto];
+        img.style.setProperty("--photo-drift", `${Math.random() * 80 - 40}px`);
+        img.style.setProperty("--photo-rotation", `${Math.random() * 24 - 12}deg`);
+        img.classList.remove("photo-emerging");
+        void img.offsetWidth;
+        img.classList.add("photo-emerging");
+
+        img.addEventListener("animationend", function finished() {
+          img.classList.remove("photo-emerging");
+          img.style.opacity = "0";
+          currentPhoto = (currentPhoto + 1) % photoElements.length;
+          setTimeout(showNextGiftPhoto, 250);
+        }, { once: true });
+      }
+
+      showNextGiftPhoto();
+    }
+
     return;
   }
 
