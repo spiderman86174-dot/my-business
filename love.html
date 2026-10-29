@@ -70,6 +70,84 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .memory-item button{min-height:42px;padding:10px;margin:6px 0 0;font-size:14px}
 .memory-empty{font-size:13px;color:#ead9f3}
 
+
+/* Dreamy love redesign */
+body {
+  background:
+    radial-gradient(ellipse at 15% 10%, #ff9edb66, transparent 42%),
+    radial-gradient(ellipse at 85% 30%, #ad8aff66, transparent 45%),
+    linear-gradient(145deg, #260e3c, #5a205f 48%, #1b123b);
+  background-attachment: fixed;
+}
+.card {
+  background: linear-gradient(145deg, #ffffff20, #f7c7ff0a);
+  border: 1px solid #ffd9ff70;
+  box-shadow: 0 24px 80px #13051f88, 0 0 35px #ff8cdd20,
+              inset 0 1px #ffffff40;
+}
+#creator, #surprise {
+  position: relative;
+}
+#creator h1, #greeting {
+  color: #ffe3f5;
+  text-shadow: 0 0 18px #ff79d4a0, 0 0 38px #b58aff70;
+}
+#surprise {
+  padding-top: 12px;
+}
+#sharedMemories .memory-item {
+  background: linear-gradient(145deg, #ffffff20, #f8b9e90d);
+  border: 1px solid #ffd7f780;
+  box-shadow: 0 12px 28px #10051d55;
+}
+#sharedMemories .memory-item img {
+  border: 2px solid #ffe0f5;
+}
+button {
+  box-shadow: 0 8px 25px #ff72c833, 0 0 0 1px #ffffff30 inset;
+}
+
+
+/* continuous-flower-rain */
+.flower-rain-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 9999;
+}
+.flower-rain-petal {
+  position: absolute;
+  top: -50px;
+  animation: flower-rain-fall linear forwards;
+  will-change: transform;
+  filter: drop-shadow(0 2px 5px #ff9edb55);
+}
+@keyframes flower-rain-fall {
+  0% { transform: translate3d(0, -30px, 0) rotate(0deg); }
+  100% { transform: translate3d(var(--drift), 110vh, 0) rotate(540deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .flower-rain-petal { animation-duration: 12s !important; }
+}
+
+
+/* Blurred uploaded-photo background */
+.photo-background {
+  position: fixed;
+  inset: -24px;
+  z-index: 0;
+  pointer-events: none;
+  background-position: center;
+  background-size: cover;
+  filter: blur(18px);
+  opacity: .32;
+}
+body {
+  background-color: #260e3c;
+  isolation: isolate;
+}
+
 </style>
 </head>
 
@@ -103,7 +181,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
       <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
     </section>
 
-    <button onclick="makeLink()">Create Surprise Link 💝</button>
+    <button onclick="makeLink()">Open My Surprise 💌</button>
     <p class="small">The music is generated in this page; no song download is needed.</p>
   </section>
 
@@ -124,15 +202,10 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
       <div class="cake-plate"></div>
     </div>
 
-    <p>
-      Someone made this little page just to bring a smile to your face.
-      You are special, and you deserve kindness, happiness and beautiful moments. 💜
-    </p>
 
-    <button onclick="toggleMusic()" id="playBtn">▶ Play music</button>
-    <button class="secondary" onclick="shareLink()">Share this surprise 💌</button>
-    <button class="secondary" onclick="copyLink()">Copy surprise link</button>
-    <p class="small">If music doesn't start, tap Play. Browsers may block automatic audio.</p>
+
+
+
   </section>
   <p id="status" class="small"></p>
 </div>
@@ -379,36 +452,56 @@ window.memoryUploadsInProgress = false;
   const query = new URLSearchParams(location.search);
   if (query.has("to")) {
     picker.hidden = true;
-    const recipientGallery = document.getElementById("sharedMemoryGallery");
     const sharedSection = document.getElementById("sharedMemories");
-    sharedSection.style.display = "block";
+    const greeting = document.getElementById("greeting");
+    const letterText = document.getElementById("letterText");
+    const status = document.getElementById("status");
+    const cake = document.getElementById("birthdayCake");
+
+    sharedSection.style.display = "none";
+    greeting.style.display = "none";
+    letterText.style.display = "none";
+    status.style.display = "none";
+
+    const surprise = document.getElementById("surprise");
+    surprise.style.display = "flex";
+    surprise.style.flexDirection = "column";
+    cake.style.order = "-1";
+
     let photos = [];
     try {
       photos = JSON.parse(query.get("photos") || "[]");
       if (!Array.isArray(photos)) photos = [];
     } catch (e) { photos = []; }
 
-    recipientGallery.replaceChildren();
-    photos.slice(0, 12).forEach((photo, i) => {
-      if (!photo || typeof photo.url !== "string" ||
-          !photo.url.startsWith("https://res.cloudinary.com/")) return;
-      const card = document.createElement("div");
-      card.className = "memory-item";
+    const firstPhoto = photos.find(photo =>
+      photo && typeof photo.url === "string" &&
+      photo.url.startsWith("https://res.cloudinary.com/")
+    );
+
+    let photoBg = document.querySelector(".photo-background");
+    if (!photoBg) {
+      photoBg = document.createElement("div");
+      photoBg.className = "photo-background";
+      photoBg.setAttribute("aria-hidden", "true");
+      document.body.prepend(photoBg);
+    }
+    if (firstPhoto) {
+      photoBg.style.backgroundImage = `url("${firstPhoto.url}")`;
+    }
+
+    const photoWrap = document.createElement("div");
+    photoWrap.id = "gfPhotoWrap";
+    photoWrap.style.cssText = "order:99;margin-top:24px;text-align:center;width:100%;";
+    if (firstPhoto) {
       const img = document.createElement("img");
-      img.src = photo.url;
-      img.alt = String(photo.caption || ("Memory photo " + (i + 1))).slice(0, 80);
-      img.loading = "lazy";
-      card.appendChild(img);
-      if (photo.caption) {
-        const cap = document.createElement("p");
-        cap.className = "small";
-        cap.textContent = String(photo.caption).slice(0, 80);
-        card.appendChild(cap);
-      }
-      recipientGallery.appendChild(card);
-    });
-    status.textContent = recipientGallery.children.length
-      ? "Shared photo memories 💗" : "No shared photos in this link.";
+      img.src = firstPhoto.url;
+      img.alt = "Photo";
+      img.style.cssText = "display:block;width:min(88%,360px);max-height:55vh;object-fit:contain;margin:0 auto;border:3px solid #ffe0f5;border-radius:22px;box-shadow:0 12px 35px #13051f88;";
+      img.loading = "eager";
+      photoWrap.appendChild(img);
+    }
+    cake.insertAdjacentElement("afterend", photoWrap);
     return;
   }
 
@@ -417,6 +510,16 @@ window.memoryUploadsInProgress = false;
     window.sharedMemoryPhotos = memories
       .filter(m => m.uploaded)
       .map(m => ({url: m.url, caption: m.caption.slice(0, 80)}));
+
+    const first = window.sharedMemoryPhotos[0];
+    let bg = document.querySelector(".photo-background");
+    if (!bg) {
+      bg = document.createElement("div");
+      bg.className = "photo-background";
+      bg.setAttribute("aria-hidden", "true");
+      document.body.prepend(bg);
+    }
+    bg.style.backgroundImage = first ? `url("${first.url}")` : "";
   }
 
   function render() {
@@ -541,5 +644,35 @@ for(let i=0;i<12;i++){
   document.body.appendChild(el);
 }
 </script>
+
+<script>
+/* continuous-flower-rain */
+(() => {
+  if (document.querySelector(".flower-rain-layer")) return;
+  const layer = document.createElement("div");
+  layer.className = "flower-rain-layer";
+  layer.setAttribute("aria-hidden", "true");
+  document.body.appendChild(layer);
+
+  const flowers = ["🌸", "🌷", "🌺", "🌼", "💮"];
+  function dropFlower() {
+    if (document.hidden) return;
+    const petal = document.createElement("span");
+    petal.className = "flower-rain-petal";
+    petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.fontSize = (14 + Math.random() * 16) + "px";
+    petal.style.setProperty("--drift", (Math.random() * 160 - 80) + "px");
+    petal.style.animationDuration = (7 + Math.random() * 6) + "s";
+    layer.appendChild(petal);
+    petal.addEventListener("animationend", () => petal.remove(), { once: true });
+  }
+  for (let i = 0; i < 14; i++) {
+    setTimeout(dropFlower, i * 250);
+  }
+  setInterval(dropFlower, 450);
+})();
+</script>
+
 </body>
 </html>
