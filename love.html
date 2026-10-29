@@ -189,7 +189,7 @@ body {
       <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
     </section>
 
-    <button id="openSurpriseButton" type="button" onclick="makeLink()" style="display:none">Open My Surprise 💌</button>
+    <button id="openSurpriseButton" type="button" onclick="makeLink()" style="display:none">मेरा सरप्राइज़ खोलें 💌</button>
     <p id="creatorStatus" class="small" aria-live="polite"></p>
     <p class="small">The music is generated in this page; no song download is needed.</p>
   </section>
@@ -277,15 +277,15 @@ function showSurprise(name, message = ""){
 
 function makeLink(){
   if (!window.loveQuizPassed) {
-    document.getElementById("creatorStatus").textContent = "Complete the love quiz first.";
+    document.getElementById("creatorStatus").textContent = "पहले लव क्विज़ पूरा करें।";
     return;
   }
   if (window.memoryUploadsInProgress) {
-    document.getElementById("creatorStatus").textContent = "Please wait until photo uploads finish.";
+    document.getElementById("creatorStatus").textContent = "फोटो अपलोड पूरा होने तक इंतज़ार करें।";
     return;
   }
   if (!(window.sharedMemoryPhotos || []).length) {
-    document.getElementById("creatorStatus").textContent = "Upload at least one photo first.";
+    document.getElementById("creatorStatus").textContent = "पहले कम-से-कम एक फोटो अपलोड करें।";
     return;
   }
 
@@ -301,7 +301,7 @@ function makeLink(){
 
   if (window.memoryUploadsInProgress) {
     document.getElementById("status").textContent =
-      "Please wait until photo uploads finish.";
+      "फोटो अपलोड पूरा होने तक इंतज़ार करें।";
     return;
   }
   const url = new URL(location.href);
@@ -719,18 +719,18 @@ for(let i=0;i<12;i++){
     {q:"What helps people build trust in a relationship?", a:"Honesty", o:["Honesty","Lying","Keeping every promise secret","Blaming others"]},
     {q:"Which is a thoughtful way to show appreciation?", a:"Saying thank you", o:["Saying thank you","Taking credit for everything","Ignoring their effort","Mocking their interests"]},
     {q:"What is a healthy way to handle a disagreement?", a:"Talk respectfully", o:["Talk respectfully","Shout over each other","Refuse to listen","Spread rumours"]},
-    {q:"Which quality means keeping your word?", a:"Reliability", o:["Reliability","Jealousy","Impatience","Carelessness"]},
-    {q:"What is an important part of a healthy relationship?", a:"Mutual respect", o:["Mutual respect","Controlling every choice","Fear of speaking","Constant pressure"]},
-    {q:"Which gesture can brighten someone's day?", a:"A kind message", o:["A kind message","An insult","Ignoring them on purpose","Breaking their belongings"]},
-    {q:"What does empathy mean?", a:"Trying to understand another person's feelings", o:["Trying to understand another person's feelings","Winning every argument","Never listening","Making decisions for everyone"]},
-    {q:"Which habit helps people stay connected?", a:"Honest communication", o:["Honest communication","Silent treatment","Guessing instead of asking","Hiding every concern"]},
-    {q:"What should you do if someone sets a boundary?", a:"Respect it", o:["Respect it","Ignore it","Make fun of it","Pressure them to change it"]},
-    {q:"Which is an example of quality time?", a:"Giving each other focused attention", o:["Giving each other focused attention","Scrolling separately the whole time","Cancelling every plan","Refusing to talk"]},
-    {q:"What is gratitude?", a:"Appreciating what someone does", o:["Appreciating what someone does","Expecting everything","Finding fault with every effort","Taking kindness for granted"]},
-    {q:"Which action can help repair hurt feelings?", a:"A sincere apology", o:["A sincere apology","Pretending nothing happened","Blaming the other person automatically","Repeating the hurtful action"]},
-    {q:"What is a good way to learn someone's preferences?", a:"Ask and listen", o:["Ask and listen","Assume everything","Ignore their answers","Choose for them every time"]},
-    {q:"Which quality supports a lasting friendship or relationship?", a:"Kindness", o:["Kindness","Cruelty","Dishonesty","Contempt"]},
-    {q:"What does consent mean in a relationship?", a:"A freely given agreement", o:["A freely given agreement","Agreement caused by pressure","Never being allowed to say no","Assuming silence means yes"]}
+    {q:"अपनी बात निभाने की आदत को क्या कहते हैं?", a:"भरोसेमंद होना", o:["भरोसेमंद होना","जलन","अधीरता","लापरवाही"]},
+    {q:"स्वस्थ रिश्ते का एक महत्वपूर्ण हिस्सा क्या है?", a:"एक-दूसरे का सम्मान", o:["एक-दूसरे का सम्मान","हर फैसले पर नियंत्रण रखना","बोलने से डरना","लगातार दबाव डालना"]},
+    {q:"कौन-सा छोटा काम किसी का दिन अच्छा बना सकता है?", a:"प्यार भरा संदेश", o:["प्यार भरा संदेश","अपमान करना","जानबूझकर अनदेखा करना","उनकी चीजें तोड़ना"]},
+    {q:"सहानुभूति का क्या अर्थ है?", a:"दूसरे की भावनाओं को समझने की कोशिश करना", o:["दूसरे की भावनाओं को समझने की कोशिश करना","हर बहस जीतना","कभी बात न सुनना","सबके लिए फैसले लेना"]},
+    {q:"लोगों को एक-दूसरे से जुड़े रहने में कौन-सी आदत मदद करती है?", a:"ईमानदारी से बातचीत", o:["ईमानदारी से बातचीत","बात करना बंद कर देना","पूछने के बजाय अंदाज़ा लगाना","हर चिंता छिपाना"]},
+    {q:"अगर कोई अपनी सीमा बताए, तो आपको क्या करना चाहिए?", a:"उस सीमा का सम्मान करें", o:["उस सीमा का सम्मान करें","उसे अनदेखा करें","उसका मज़ाक उड़ाएँ","उसे बदलने के लिए दबाव डालें"]},
+    {q:"एक-दूसरे को अच्छा समय देने का उदाहरण क्या है?", a:"एक-दूसरे पर पूरा ध्यान देना", o:["एक-दूसरे पर पूरा ध्यान देना","पूरा समय अलग-अलग फोन चलाना","हर योजना रद्द करना","बात करने से मना करना"]},
+    {q:"कृतज्ञता का क्या अर्थ है?", a:"किसी के काम की कद्र करना", o:["किसी के काम की कद्र करना","हर चीज़ की उम्मीद करना","हर कोशिश में कमी निकालना","दयालुता को हल्के में लेना"]},
+    {q:"किस काम से किसी का दुख कम करने में मदद मिल सकती है?", a:"दिल से माफ़ी माँगना", o:["दिल से माफ़ी माँगना","ऐसा दिखाना जैसे कुछ हुआ ही नहीं","बिना सोचे दूसरे को दोष देना","वही दुख पहुँचाने वाला काम दोहराना"]},
+    {q:"किसी की पसंद जानने का अच्छा तरीका क्या है?", a:"पूछें और ध्यान से सुनें", o:["पूछें और ध्यान से सुनें","हर बात खुद मान लें","उनके जवाब अनदेखा करें","हर बार उनकी जगह फैसला करें"]},
+    {q:"लंबे समय तक दोस्ती या रिश्ता बनाए रखने में कौन-सा गुण मदद करता है?", a:"दयालुता", o:["दयालुता","क्रूरता","बेईमानी","तिरस्कार"]},
+    {q:"रिश्ते में सहमति का क्या अर्थ है?", a:"बिना दबाव के दी गई सहमति", o:["बिना दबाव के दी गई सहमति","दबाव में दी गई सहमति","ना कहने की अनुमति न होना","चुप्पी को हाँ मान लेना"]}
   ];
 
   let correct = 0;
@@ -746,14 +746,14 @@ for(let i=0;i<12;i++){
       quiz.style.display = "none";
       memoryBox.style.display = "";
       openButton.style.display = "none";
-      progressEl.textContent = "10/10 correct — photo memories unlocked!";
-      feedbackEl.textContent = "Choose your photos, wait for uploads to finish, then open your surprise.";
+      progressEl.textContent = "10 में से 10 सही! अब फोटो यादें अनलॉक हो गई हैं!";
+      feedbackEl.textContent = "अपनी फोटो चुनें, अपलोड पूरा होने दें, फिर सरप्राइज़ खोलें।";
       return;
     }
     if (used.size === pool.length) {
-      questionEl.textContent = "You've seen all the questions.";
+      questionEl.textContent = "आप सभी सवाल देख चुके हैं।";
       optionsEl.replaceChildren();
-      feedbackEl.textContent = "No questions will repeat. Refresh to start a new round.";
+      feedbackEl.textContent = "कोई सवाल दोहराया नहीं जाएगा। नया राउंड शुरू करने के लिए पेज रीफ्रेश करें।";
       return;
     }
     const available = pool.map((item,i)=>i).filter(i=>!used.has(i));
@@ -773,7 +773,7 @@ for(let i=0;i<12;i++){
           correct++;
           feedbackEl.textContent = "That's right! 💗";
         } else {
-          feedbackEl.textContent = "Not quite — here's a different question. 💕";
+          feedbackEl.textContent = "जवाब सही नहीं है—अब एक अलग सवाल आएगा। 💕";
         }
         progressEl.textContent = correct + "/10 correct answers";
         window.setTimeout(nextQuestion, 650);
