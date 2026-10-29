@@ -171,7 +171,15 @@ body {
     </select>
 
 
-    <section class="memory-box" aria-labelledby="memoryHeading">
+    <section id="loveQuiz" class="memory-box">
+      <h2>💗 A Little Love Quiz</h2>
+      <p id="quizProgress">Get 10 answers right to unlock your photo memories.</p>
+      <h3 id="quizQuestion"></h3>
+      <div id="quizOptions" class="memory-grid"></div>
+      <p id="quizFeedback" class="small" aria-live="polite"></p>
+    </section>
+
+    <section class="memory-box" aria-labelledby="memoryHeading" style="display:none">
       <h2 id="memoryHeading">📸 Photo Memories</h2>
       <p class="small">Choose your favourite photos and add little captions.</p>
       <input id="memoryPhotos" type="file" accept="image/*" multiple
@@ -181,7 +189,7 @@ body {
       <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
     </section>
 
-    <button type="button" onclick="makeLink()">Open My Surprise 💌</button>
+    <button id="openSurpriseButton" type="button" onclick="makeLink()" style="display:none">Open My Surprise 💌</button>
     <p id="creatorStatus" class="small" aria-live="polite"></p>
     <p class="small">The music is generated in this page; no song download is needed.</p>
   </section>
@@ -268,6 +276,19 @@ function showSurprise(name, message = ""){
 }
 
 function makeLink(){
+  if (!window.loveQuizPassed) {
+    document.getElementById("creatorStatus").textContent = "Complete the love quiz first.";
+    return;
+  }
+  if (window.memoryUploadsInProgress) {
+    document.getElementById("creatorStatus").textContent = "Please wait until photo uploads finish.";
+    return;
+  }
+  if (!(window.sharedMemoryPhotos || []).length) {
+    document.getElementById("creatorStatus").textContent = "Upload at least one photo first.";
+    return;
+  }
+
   const name = safeName(document.getElementById("name").value);
   const music = document.getElementById("music").value;
   const message = document.getElementById("letter").value.trim().slice(0,1000);
@@ -619,7 +640,12 @@ window.memoryUploadsInProgress = false;
     window.memoryUploadsInProgress = false;
     syncPhotos();
     render();
-    if (uploaded) status.textContent = uploaded + " photo(s) uploaded. You can create the link now.";
+    if (uploaded) {
+      status.textContent = uploaded + " photo(s) uploaded. You can create the link now.";
+      if (window.loveQuizPassed && (window.sharedMemoryPhotos || []).length) {
+        document.getElementById("openSurpriseButton").style.display = "";
+      }
+    }
   });
 
   window.addEventListener("pagehide", () => {
@@ -673,6 +699,91 @@ for(let i=0;i<12;i++){
   }
   setInterval(dropFlower, 450);
 })();
+
+(function initLoveQuiz(){
+  const quiz = document.getElementById("loveQuiz");
+  const memoryBox = document.querySelector('[aria-labelledby="memoryHeading"]');
+  const openButton = document.getElementById("openSurpriseButton");
+  const questionEl = document.getElementById("quizQuestion");
+  const optionsEl = document.getElementById("quizOptions");
+  const progressEl = document.getElementById("quizProgress");
+  const feedbackEl = document.getElementById("quizFeedback");
+  if (!quiz || !memoryBox || !openButton || !questionEl || !optionsEl) return;
+
+  const pool = [
+    {q:"Which word means a strong feeling of affection?", a:"Love", o:["Love","Distance","Silence","Weather"]},
+    {q:"Which flower is commonly associated with romance?", a:"Rose", o:["Rose","Cactus","Fern","Moss"]},
+    {q:"What do people usually write to share heartfelt feelings?", a:"A love letter", o:["A love letter","A shopping list","A timetable","A receipt"]},
+    {q:"Which date is widely known as Valentine's Day?", a:"February 14", o:["February 14","January 1","April 1","December 31"]},
+    {q:"Which action shows someone is listening carefully?", a:"Paying attention", o:["Paying attention","Interrupting constantly","Ignoring them","Changing the subject every time"]},
+    {q:"What helps people build trust in a relationship?", a:"Honesty", o:["Honesty","Lying","Keeping every promise secret","Blaming others"]},
+    {q:"Which is a thoughtful way to show appreciation?", a:"Saying thank you", o:["Saying thank you","Taking credit for everything","Ignoring their effort","Mocking their interests"]},
+    {q:"What is a healthy way to handle a disagreement?", a:"Talk respectfully", o:["Talk respectfully","Shout over each other","Refuse to listen","Spread rumours"]},
+    {q:"Which quality means keeping your word?", a:"Reliability", o:["Reliability","Jealousy","Impatience","Carelessness"]},
+    {q:"What is an important part of a healthy relationship?", a:"Mutual respect", o:["Mutual respect","Controlling every choice","Fear of speaking","Constant pressure"]},
+    {q:"Which gesture can brighten someone's day?", a:"A kind message", o:["A kind message","An insult","Ignoring them on purpose","Breaking their belongings"]},
+    {q:"What does empathy mean?", a:"Trying to understand another person's feelings", o:["Trying to understand another person's feelings","Winning every argument","Never listening","Making decisions for everyone"]},
+    {q:"Which habit helps people stay connected?", a:"Honest communication", o:["Honest communication","Silent treatment","Guessing instead of asking","Hiding every concern"]},
+    {q:"What should you do if someone sets a boundary?", a:"Respect it", o:["Respect it","Ignore it","Make fun of it","Pressure them to change it"]},
+    {q:"Which is an example of quality time?", a:"Giving each other focused attention", o:["Giving each other focused attention","Scrolling separately the whole time","Cancelling every plan","Refusing to talk"]},
+    {q:"What is gratitude?", a:"Appreciating what someone does", o:["Appreciating what someone does","Expecting everything","Finding fault with every effort","Taking kindness for granted"]},
+    {q:"Which action can help repair hurt feelings?", a:"A sincere apology", o:["A sincere apology","Pretending nothing happened","Blaming the other person automatically","Repeating the hurtful action"]},
+    {q:"What is a good way to learn someone's preferences?", a:"Ask and listen", o:["Ask and listen","Assume everything","Ignore their answers","Choose for them every time"]},
+    {q:"Which quality supports a lasting friendship or relationship?", a:"Kindness", o:["Kindness","Cruelty","Dishonesty","Contempt"]},
+    {q:"What does consent mean in a relationship?", a:"A freely given agreement", o:["A freely given agreement","Agreement caused by pressure","Never being allowed to say no","Assuming silence means yes"]}
+  ];
+
+  let correct = 0;
+  let used = new Set();
+  let current = null;
+  window.loveQuizPassed = false;
+  memoryBox.style.display = "none";
+  openButton.style.display = "none";
+
+  function nextQuestion(){
+    if (correct >= 10) {
+      window.loveQuizPassed = true;
+      quiz.style.display = "none";
+      memoryBox.style.display = "";
+      openButton.style.display = "none";
+      progressEl.textContent = "10/10 correct — photo memories unlocked!";
+      feedbackEl.textContent = "Choose your photos, wait for uploads to finish, then open your surprise.";
+      return;
+    }
+    if (used.size === pool.length) {
+      questionEl.textContent = "You've seen all the questions.";
+      optionsEl.replaceChildren();
+      feedbackEl.textContent = "No questions will repeat. Refresh to start a new round.";
+      return;
+    }
+    const available = pool.map((item,i)=>i).filter(i=>!used.has(i));
+    const index = available[Math.floor(Math.random()*available.length)];
+    used.add(index);
+    current = pool[index];
+    questionEl.textContent = current.q;
+    optionsEl.replaceChildren();
+    const choices = [...current.o].sort(()=>Math.random()-0.5);
+    choices.forEach(choice=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = choice;
+      btn.addEventListener("click", ()=>{
+        optionsEl.querySelectorAll("button").forEach(b=>b.disabled=true);
+        if (choice === current.a) {
+          correct++;
+          feedbackEl.textContent = "That's right! 💗";
+        } else {
+          feedbackEl.textContent = "Not quite — here's a different question. 💕";
+        }
+        progressEl.textContent = correct + "/10 correct answers";
+        window.setTimeout(nextQuestion, 650);
+      });
+      optionsEl.appendChild(btn);
+    });
+  }
+  nextQuestion();
+})();
+
 </script>
 
 </body>
