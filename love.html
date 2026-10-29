@@ -345,7 +345,6 @@ body {
 
     <h2 id="greeting"></h2>
     <audio id="secondPageSong" src="second-page-theme.mp3?v=dekha1" loop preload="none"></audio>
-    <button id="playBtn" type="button" onclick="toggleMusic()">▶ Play Dekha Ek Khwab 🎵</button>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
       <div class="cake-message">You Make My World Glow ✨</div>
@@ -883,6 +882,10 @@ for(let i=0;i<12;i++){
     if (openingTheme) {
       openingTheme.pause();
       openingTheme.currentTime = 0;
+    }
+    const secondPageSong = document.getElementById("secondPageSong");
+    if (secondPageSong) {
+      secondPageSong.play().catch(() => {});
     }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
     for (let i = 0; i < 42; i++) {
