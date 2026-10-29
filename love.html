@@ -830,7 +830,7 @@ for(let i=0;i<12;i++){
       window.loveQuizPassed = true;
       quiz.style.display = "none";
       memoryBox.style.display = "";
-      openButton.style.display = "none";
+      openButton.style.display = (window.sharedMemoryPhotos || []).length ? "" : "none";
       progressEl.textContent = "10 में से 10 सही! अब फोटो यादें अनलॉक हो गई हैं!";
       feedbackEl.textContent = "अपनी फोटो चुनें, अपलोड पूरा होने दें, फिर सरप्राइज़ खोलें।";
       return;
