@@ -284,6 +284,7 @@ body {
 
 <body>
 
+<audio id="openingTheme" src="opening-theme.mp3" autoplay loop preload="auto"></audio>
 <div id="cinematicIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
   <div class="intro-content">
     <div class="intro-hearts" aria-hidden="true">♡ ✦ ♥ ✦ ♡</div>
@@ -933,6 +934,11 @@ for(let i=0;i<12;i++){
   const enter = document.getElementById("enterSurprise");
   if (!intro || !enter) return;
   const closeIntro = () => {
+    const openingTheme = document.getElementById("openingTheme");
+    if (openingTheme) {
+      openingTheme.pause();
+      openingTheme.currentTime = 0;
+    }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
     for (let i = 0; i < 42; i++) {
       const particle = document.createElement("span");
