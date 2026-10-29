@@ -173,6 +173,34 @@ h1 {
   to { filter: drop-shadow(0 0 18px #f7d58b99); }
 }
 
+
+/* Cinematic romantic atmosphere */
+body {
+  background:
+    radial-gradient(ellipse at 50% 0%, #59305f 0%, transparent 52%),
+    radial-gradient(ellipse at 10% 65%, #45182f88 0%, transparent 45%),
+    linear-gradient(155deg, #100b20, #21102c 55%, #100918) !important;
+}
+.card {
+  border: 1px solid #e8c77955 !important;
+  box-shadow: 0 0 35px #a34d9855, 0 22px 65px #05030b99,
+              inset 0 1px 0 #fff4dc22 !important;
+}
+.cinematic-name {
+  background: linear-gradient(100deg, #fff5d8, #e8b85b, #fff0c2, #d89b39, #fff5d8) !important;
+  background-size: 250% auto !important;
+  animation: nameGlow 3s ease-in-out infinite alternate,
+             goldShimmer 6s linear infinite !important;
+}
+@keyframes goldShimmer {
+  from { background-position: 0% center; }
+  to { background-position: 250% center; }
+}
+.cake-message {
+  color: #ffe6bd !important;
+  text-shadow: 0 0 10px #ff91d9, 0 0 24px #e8b85b99 !important;
+}
+
 </style>
 </head>
 
