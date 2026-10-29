@@ -181,7 +181,8 @@ body {
       <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
     </section>
 
-    <button onclick="makeLink()">Open My Surprise 💌</button>
+    <button type="button" onclick="try { makeLink(); } catch (e) { const m=document.getElementById("creatorStatus") || document.getElementById("status"); if(m) m.textContent="Error: " + e.message; console.error(e); }">Open My Surprise 💌</button>
+    <p id="creatorStatus" class="small" aria-live="polite"></p>
     <p class="small">The music is generated in this page; no song download is needed.</p>
   </section>
 
@@ -272,7 +273,7 @@ function makeLink(){
   const message = document.getElementById("letter").value.trim().slice(0,1000);
 
   if(!name){
-    document.getElementById("status").textContent =
+    document.getElementById("creatorStatus").textContent =
       "Please enter a name first.";
     return;
   }
