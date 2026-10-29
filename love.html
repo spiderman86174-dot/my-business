@@ -132,6 +132,36 @@ button {
 }
 
 
+
+/* Floating uploaded photos on the shared final page */
+.floating-photo-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 4;
+}
+.floating-memory-photo {
+  position: absolute;
+  width: var(--photo-size, 90px);
+  height: calc(var(--photo-size, 90px) * 1.28);
+  object-fit: cover;
+  border: 2px solid #ffe0f5;
+  border-radius: 15px;
+  box-shadow: 0 8px 28px #ff72c866, 0 0 18px #e9a3ff55;
+  opacity: .86;
+  animation: uploaded-photo-float var(--photo-duration, 9s) ease-in-out infinite;
+  animation-delay: var(--photo-delay, 0s);
+  will-change: transform;
+}
+@keyframes uploaded-photo-float {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(var(--photo-dx), var(--photo-dy), 0) rotate(var(--photo-rotate)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .floating-memory-photo { animation: none; }
+}
+
 /* Blurred uploaded-photo background */
 .photo-background {
   position: fixed;
@@ -573,8 +603,9 @@ window.memoryUploadsInProgress = false;
       if (!Array.isArray(photos)) photos = [];
     } catch (e) { photos = []; }
 
-    const firstPhoto = photos.find(photo =>
-      photo && typeof photo.url === "string" &&
+    const validPhotos = photos.filter(photo =>
+      photo &&
+      typeof photo.url === "string" &&
       photo.url.startsWith("https://res.cloudinary.com/")
     );
 
@@ -585,22 +616,47 @@ window.memoryUploadsInProgress = false;
       photoBg.setAttribute("aria-hidden", "true");
       document.body.prepend(photoBg);
     }
-    if (firstPhoto) {
-      photoBg.style.backgroundImage = `url("${firstPhoto.url}")`;
+    if (validPhotos.length) {
+      photoBg.style.backgroundImage = `url("${validPhotos[0].url}")`;
     }
 
-    const photoWrap = document.createElement("div");
-    photoWrap.id = "gfPhotoWrap";
-    photoWrap.style.cssText = "order:99;margin-top:24px;text-align:center;width:100%;";
-    if (firstPhoto) {
+    const floatingLayer = document.createElement("div");
+    floatingLayer.className = "floating-photo-layer";
+    floatingLayer.setAttribute("aria-hidden", "true");
+
+    validPhotos.forEach((photo, i) => {
       const img = document.createElement("img");
-      img.src = firstPhoto.url;
-      img.alt = "Photo";
-      img.style.cssText = "display:block;width:min(88%,360px);max-height:55vh;object-fit:contain;margin:0 auto;border:3px solid #ffe0f5;border-radius:22px;box-shadow:0 12px 35px #13051f88;";
+      img.className = "floating-memory-photo";
+      img.src = photo.url;
+      img.alt = "";
       img.loading = "eager";
-      photoWrap.appendChild(img);
-    }
-    cake.insertAdjacentElement("afterend", photoWrap);
+
+      const size = 65 + Math.random() * 45;
+      const side = i % 4;
+      const left = side === 0
+        ? 2 + Math.random() * 8
+        : side === 1
+          ? 84 + Math.random() * 8
+          : 15 + Math.random() * 65;
+      const top = side === 2
+        ? 2 + Math.random() * 10
+        : side === 3
+          ? 78 + Math.random() * 10
+          : 15 + Math.random() * 65;
+
+      img.style.left = `clamp(2px, ${left}vw, calc(100vw - ${size}px))`;
+      img.style.top = `clamp(2px, ${top}vh, calc(100vh - ${size * 1.28}px))`;
+      img.style.setProperty("--photo-size", `${size}px`);
+      img.style.setProperty("--photo-dx", `${Math.random() * 70 - 35}px`);
+      img.style.setProperty("--photo-dy", `${Math.random() * 90 - 45}px`);
+      img.style.setProperty("--photo-rotate", `${Math.random() * 24 - 12}deg`);
+      img.style.setProperty("--photo-duration", `${7 + Math.random() * 8}s`);
+      img.style.setProperty("--photo-delay", `${-Math.random() * 12}s`);
+
+      floatingLayer.appendChild(img);
+    });
+
+    document.body.appendChild(floatingLayer);
     return;
   }
 
