@@ -148,14 +148,39 @@ body {
   isolation: isolate;
 }
 
+
+h1 {
+  color: #fff3fa;
+  text-shadow: 0 0 18px #d96baf88, 0 0 42px #8b5cf655;
+}
+.cinematic-name {
+  display: inline-block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.18em;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(110deg, #fff4d6, #f4c66b, #fff0d0, #dca44b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 12px #e8b85b66);
+  animation: nameGlow 3s ease-in-out infinite alternate;
+}
+@keyframes nameGlow {
+  from { filter: drop-shadow(0 0 7px #e8b85b44); }
+  to { filter: drop-shadow(0 0 18px #f7d58b99); }
+}
+
 </style>
 </head>
 
 <body>
 <div class="card">
   <div style="font-size:42px">💌 💗 ✨</div>
-  <h1>A Little Love Surprise</h1>
-  <p>Create a sweet, personalized surprise for someone special.</p>
+  <h1>My Heart Has a Favorite Person…<br><span class="cinematic-name">Nermeen ❤️</span></h1>
+
 
   <section id="creator">
     <input id="name" maxlength="50"
@@ -204,7 +229,7 @@ body {
     <h2 id="greeting"></h2>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
-      <div class="cake-message">Make a wish! ✨</div>
+      <div class="cake-message">Nermeen, You Make My World Glow ✨</div>
       <div class="candles"><i class="candle"><b></b></i><i class="candle"><b></b></i><i class="candle"><b></b></i></div>
       <div class="cake-top"></div>
       <div class="cake-body">♥　♥　♥</div>
