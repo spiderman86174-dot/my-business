@@ -300,8 +300,8 @@ function makeLink(){
     url.searchParams.delete("photos");
   }
 
-  history.replaceState({}, "", url);
-  showSurprise(name,message);
+  location.href = url.href;
+  return;
   document.getElementById("status").textContent =
     "Your personalized surprise is ready to share.";
 }
