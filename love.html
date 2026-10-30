@@ -851,6 +851,7 @@ window.memoryUploadsInProgress = false;
 
   const query = new URLSearchParams(location.search);
   if (query.has("to")) {
+    document.getElementById("creator").style.display = "none";
     picker.hidden = true;
     const sharedSection = document.getElementById("sharedMemories");
     const greeting = document.getElementById("greeting");
