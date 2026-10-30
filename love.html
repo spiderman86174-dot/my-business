@@ -884,6 +884,11 @@ window.memoryUploadsInProgress = false;
       return img;
     });
 
+    if (recipient) {
+      floatingLayer.style.visibility = "hidden";
+      window.recipientFloatingLayer = floatingLayer;
+    }
+
     document.body.appendChild(floatingLayer);
 
     if (photoElements.length) {
@@ -1040,8 +1045,7 @@ window.memoryUploadsInProgress = false;
 })();
 if(recipient){
   document.getElementById("name").value = recipient;
-  const message = params.get("message") || "";
-  showSurprise(recipient, message);
+  window.recipientMessage = params.get("message") || "";
 }
 
 for(let i=0;i<12;i++){
@@ -1053,6 +1057,111 @@ for(let i=0;i<12;i++){
   el.style.fontSize=(16+Math.random()*18)+"px";
   document.body.appendChild(el);
 }
+(function initLoveQuiz(){
+  const quiz = document.getElementById("loveQuiz");
+  const memoryBox = document.querySelector('[aria-labelledby="memoryHeading"]');
+  const openButton = document.getElementById("openSurpriseButton");
+  const questionEl = document.getElementById("quizQuestion");
+  const optionsEl = document.getElementById("quizOptions");
+  const progressEl = document.getElementById("quizProgress");
+  const feedbackEl = document.getElementById("quizFeedback");
+  if (!quiz || !memoryBox || !openButton || !questionEl || !optionsEl) return;
+
+  const pool = [
+    {"q": "अगर मैं तुम्हारे सामने आकर मुस्कुरा दूँ, तो तुम्हारा दिल क्या कहेगा?", "a": "बस, मेरा दिन बन गया", "o": ["बस, मेरा दिन बन गया", "आज फिर होमवर्क याद आ गया", "मुझे कोई फर्क नहीं पड़ता", "चलो, अब घर चलते हैं"]},
+    {"q": "अगर मैं पूछूँ कि मेरी कौन-सी बात तुम्हें सबसे प्यारी लगती है?", "a": "तुम्हारी मुस्कान और तुम्हारा अंदाज़", "o": ["तुम्हारी मुस्कान और तुम्हारा अंदाज़", "तुम्हारा फोन मॉडल", "तुम्हारी घड़ी", "तुम्हारे जूतों का रंग"]},
+    {"q": "अगर हम साथ सूर्यास्त देखें, तो सबसे खास क्या होगा?", "a": "तुम्हारे साथ दिल की बातें करना", "o": ["तुम्हारे साथ दिल की बातें करना", "सूरज को जल्दी डूबने को कहना", "बस फोन चलाते रहना", "वहाँ से तुरंत चले जाना"]},
+    {"q": "अगर मैं अचानक कहूँ कि आज तुम्हारी बहुत याद आई, तो?", "a": "मैं भी कहूँगा कि तुम मेरे ख़यालों में थीं", "o": ["मैं भी कहूँगा कि तुम मेरे ख़यालों में थीं", "मैं मौसम का हाल पूछूँगा", "मैं बात बदल दूँगा", "मैं संदेश पढ़कर भूल जाऊँगा"]},
+    {"q": "हमारी पहली मुलाक़ात को यादगार क्या बनाएगा?", "a": "सच्ची मुस्कान और प्यारी बातें", "o": ["सच्ची मुस्कान और प्यारी बातें", "कौन कितना महँगा फोन लाया", "कौन सबसे ज़्यादा दिखावा करे", "कौन पहले घर जाए"]},
+    {"q": "अगर मैं तुम्हारे लिए छोटा-सा प्रेम-पत्र लिखूँ, तो तुम क्या करोगे?", "a": "उसे सँभालकर रखूँगा और दिल से पढ़ूँगा", "o": ["उसे सँभालकर रखूँगा और दिल से पढ़ूँगा", "उसे बिना पढ़े फेंक दूँगा", "उसका मज़ाक उड़ाऊँगा", "दूसरों को दिखाकर हँसूँगा"]},
+    {"q": "अगर मैं उदास होऊँ, तो तुम्हारा प्यार कैसे दिखेगा?", "a": "मेरी बात सुनना और प्यार से साथ देना", "o": ["मेरी बात सुनना और प्यार से साथ देना", "मेरी भावनाओं को नज़रअंदाज़ करना", "मुझे दोष देना", "मेरी परेशानी पर हँसना"]},
+    {"q": "अगर हम दोनों को एक प्यारा-सा नाम चुनना हो, तो?", "a": "ऐसा नाम जो हम दोनों को खास लगे", "o": ["ऐसा नाम जो हम दोनों को खास लगे", "ऐसा नाम जो सबको चिढ़ाए", "बिना पूछे कोई नाम थोपना", "नाम को लेकर बहस करना"]},
+    {"q": "अगर मैं कहूँ कि तुम्हारे साथ समय जल्दी बीतता है, तो?", "a": "क्योंकि तुम्हारे साथ हर पल प्यारा लगता है", "o": ["क्योंकि तुम्हारे साथ हर पल प्यारा लगता है", "क्योंकि घड़ी खराब है", "क्योंकि मुझे जल्दी जाना है", "क्योंकि समय देखना भूल गया"]},
+    {"q": "अगर हम अपनी एक याद तस्वीर में सँभालें, तो कैसी तस्वीर चुनोगे?", "a": "ऐसी जिसमें हम दोनों दिल से खुश हों", "o": ["ऐसी जिसमें हम दोनों दिल से खुश हों", "ऐसी जिसमें कोई भी खुश न हो", "बस धुँधली तस्वीर", "बिना पूछे किसी की तस्वीर"]},
+    {"q": "अगर मैं तुम्हारी तारीफ़ करूँ, तो सबसे प्यारा जवाब क्या होगा?", "a": "तुम्हारी बात मेरे लिए बहुत मायने रखती है", "o": ["तुम्हारी बात मेरे लिए बहुत मायने रखती है", "तुम्हारी तारीफ़ बेकार है", "मुझे कोई फर्क नहीं पड़ता", "तुम्हें चुप रहना चाहिए"]},
+    {"q": "हमारी प्यारी-सी शाम में सबसे खास क्या होगा?", "a": "साथ समय बिताना और दिल की बातें करना", "o": ["साथ समय बिताना और दिल की बातें करना", "पूरी शाम एक-दूसरे को अनदेखा करना", "हर बात पर बहस करना", "सिर्फ़ फोन देखते रहना"]},
+    {"q": "अगर मैं तुम्हारे लिए एक गाना चुनूँ, तो तुम क्या करोगे?", "a": "ध्यान से सुनकर मुझे बताऊँगा कि कैसा लगा", "o": ["ध्यान से सुनकर मुझे बताऊँगा कि कैसा लगा", "बिना सुने उसे बंद कर दूँगा", "उसका मज़ाक उड़ाऊँगा", "मेरी पसंद को बेकार कहूँगा"]},
+    {"q": "अगर मैं कहूँ कि तुम आज बहुत खास लग रहे हो, तो?", "a": "मुस्कुराकर प्यार से धन्यवाद कहूँगा", "o": ["मुस्कुराकर प्यार से धन्यवाद कहूँगा", "तुम्हारी बात का मज़ाक उड़ाऊँगा", "तुम्हें अनदेखा करूँगा", "तुम्हें बुरा महसूस कराऊँगा"]},
+    {"q": "अगर हम साथ बारिश देखें, तो सबसे प्यारा क्या होगा?", "a": "बारिश देखते हुए प्यारी बातें करना", "o": ["बारिश देखते हुए प्यारी बातें करना", "एक-दूसरे से नाराज़ रहना", "सिर्फ़ शिकायत करना", "बिना बताए वहाँ से चले जाना"]},
+    {"q": "अगर मैं तुम्हें कोई छोटी-सी चीज़ उपहार में दूँ, तो?", "a": "उसमें छिपे प्यार और मेहनत की कद्र करूँगा", "o": ["उसमें छिपे प्यार और मेहनत की कद्र करूँगा", "उसकी कीमत पर ही ध्यान दूँगा", "उसे बेकार कहूँगा", "उपहार देने वाले का मज़ाक उड़ाऊँगा"]},
+    {"q": "प्यार में सबसे खूबसूरत एहसास कौन-सा है?", "a": "किसी के साथ सुरक्षित, सम्मानित और खास महसूस करना", "o": ["किसी के साथ सुरक्षित, सम्मानित और खास महसूस करना", "हर समय डर महसूस करना", "अपनी बात कहने से घबराना", "हर बात पर नियंत्रण होना"]},
+    {"q": "अगर हमारे विचार अलग हों, तो हमें क्या करना चाहिए?", "a": "एक-दूसरे की बात सुनकर सम्मान से समझना", "o": ["एक-दूसरे की बात सुनकर सम्मान से समझना", "अपनी बात ज़बरदस्ती मनवाना", "एक-दूसरे का मज़ाक उड़ाना", "बिना सुने फैसला करना"]},
+    {"q": "अगर मैं तुम्हारे साथ भविष्य का कोई प्यारा सपना साझा करूँ, तो?", "a": "ध्यान से सुनकर अपने सपने भी साझा करना", "o": ["ध्यान से सुनकर अपने सपने भी साझा करना", "उस सपने पर हँसना", "मेरी बात बीच में रोकना", "मेरे सपने को बेकार कहना"]},
+    {"q": "एक खूबसूरत रिश्ते का सबसे प्यारा वादा क्या है?", "a": "ईमानदारी, सम्मान और एक-दूसरे का साथ", "o": ["ईमानदारी, सम्मान और एक-दूसरे का साथ", "हर बात छिपाना", "एक-दूसरे पर दबाव डालना", "भावनाओं की कद्र न करना"]}
+  ];
+
+  let correct = 0;
+  let used = new Set();
+  let current = null;
+  window.loveQuizPassed = false;
+  memoryBox.style.display = "none";
+  openButton.style.display = "none";
+
+  function nextQuestion(){
+    if (correct >= 10) {
+      window.loveQuizPassed = true;
+      quiz.style.display = "none";
+      memoryBox.style.display = "";
+      openButton.style.display = (window.sharedMemoryPhotos || []).length ? "" : "none";
+      progressEl.textContent = "10 में से 10 सही! अब फोटो यादें अनलॉक हो गई हैं!";
+      feedbackEl.textContent = "अपनी फोटो यादों का आनंद लें! 💗";
+
+      if (recipient) {
+        memoryBox.style.display = "none";
+        const photoLayer = window.recipientFloatingLayer;
+        if (photoLayer) photoLayer.style.visibility = "visible";
+
+        showSurprise(recipient, window.recipientMessage || "");
+
+        const secondPageSong = document.getElementById("secondPageSong");
+        if (secondPageSong) secondPageSong.pause();
+
+        let inaamSong = document.getElementById("inaamLastPageSong");
+        if (!inaamSong) {
+          inaamSong = document.createElement("audio");
+          inaamSong.id = "inaamLastPageSong";
+          inaamSong.src = "inaam-last-page.mp3?v=inaam1";
+          inaamSong.loop = true;
+          inaamSong.preload = "auto";
+          document.body.appendChild(inaamSong);
+        }
+        inaamSong.play().catch(() => {});
+      }
+      return;
+    }
+    if (used.size === pool.length) {
+      questionEl.textContent = "आप सभी सवाल देख चुके हैं।";
+      optionsEl.replaceChildren();
+      feedbackEl.textContent = "कोई सवाल दोहराया नहीं जाएगा। नया राउंड शुरू करने के लिए पेज रीफ्रेश करें।";
+      return;
+    }
+    const available = pool.map((item,i)=>i).filter(i=>!used.has(i));
+    const index = available[Math.floor(Math.random()*available.length)];
+    used.add(index);
+    current = pool[index];
+    questionEl.textContent = current.q;
+    optionsEl.replaceChildren();
+    const choices = [...current.o].sort(()=>Math.random()-0.5);
+    choices.forEach(choice=>{
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.textContent = choice;
+      btn.addEventListener("click", ()=>{
+        optionsEl.querySelectorAll("button").forEach(b=>b.disabled=true);
+        if (choice === current.a) {
+          correct++;
+          feedbackEl.textContent = "That's right! 💗";
+        } else {
+          feedbackEl.textContent = "जवाब सही नहीं है—अब एक अलग सवाल आएगा। 💕";
+        }
+        progressEl.textContent = correct + "/10 correct answers";
+        window.setTimeout(nextQuestion, 650);
+      });
+      optionsEl.appendChild(btn);
+    });
+  }
+  nextQuestion();
+})()
 </script>
 
 
@@ -1074,20 +1183,7 @@ for(let i=0;i<12;i++){
     const secondPageSong = document.getElementById("secondPageSong");
     const isSharedFinalPage = new URLSearchParams(location.search).has("to");
 
-    if (isSharedFinalPage) {
-      if (secondPageSong) secondPageSong.pause();
-
-      let inaamSong = document.getElementById("inaamLastPageSong");
-      if (!inaamSong) {
-        inaamSong = document.createElement("audio");
-        inaamSong.id = "inaamLastPageSong";
-        inaamSong.src = "inaam-last-page.mp3?v=inaam1";
-        inaamSong.loop = true;
-        inaamSong.preload = "auto";
-        document.body.appendChild(inaamSong);
-      }
-      inaamSong.play().catch(() => {});
-    } else if (secondPageSong) {
+    if (secondPageSong) {
       secondPageSong.play().catch(() => {});
     }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
