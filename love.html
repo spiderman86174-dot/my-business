@@ -33,16 +33,18 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
 
 
-.birthday-cake{width:min(250px,80vw);margin:28px auto;text-align:center;animation:cakeFloat 3s ease-in-out infinite;filter:drop-shadow(0 8px 16px #bd80ff55)}
-.cake-message{color:#ffe0f5;font-size:17px;font-weight:bold;margin-bottom:12px;text-shadow:0 0 12px #ff80d0}
-.candles{display:flex;justify-content:center;gap:24px;height:42px}
-.candle{position:relative;display:block;width:10px;height:35px;border-radius:4px;background:repeating-linear-gradient(45deg,#fff0f7 0 5px,#ff83c8 5px 9px)}
-.candle b{position:absolute;left:0;top:-16px;width:11px;height:16px;border-radius:50% 50% 45% 45%;background:radial-gradient(#fff9b0,#ffbd55 55%,#ff70a8);box-shadow:0 0 12px #ffc86b;animation:flameFlicker .55s ease-in-out infinite alternate}
-.cake-top{position:relative;width:190px;height:26px;margin:-2px auto 0;border-radius:50%;background:linear-gradient(90deg,#ffc9ed,#fff0fb,#e9c5ff);border:2px solid #fff0fb}
-.cake-body{box-sizing:border-box;width:190px;height:57px;margin:-8px auto 0;padding-top:16px;border-radius:0 0 16px 16px;background:linear-gradient(100deg,#c28bff,#f5a7e2,#c7a0ff);color:#fff0fa;font-size:19px;border-bottom:5px solid #f9d9ff}
-.cake-plate{width:220px;height:13px;margin:auto;border-radius:50%;background:linear-gradient(#fff0ff,#d5aaff)}
-@keyframes cakeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-@keyframes flameFlicker{from{transform:rotate(-7deg) scale(.92)}to{transform:rotate(7deg) scale(1.08)}}
+.birthday-cake{width:min(250px,80vw);margin:32px auto;text-align:center;animation:cakeFloat 3s ease-in-out infinite;filter:drop-shadow(0 12px 20px #bd80ff88)}
+.cake-message{color:#ffe0f5;font-size:17px;font-weight:bold;margin-bottom:16px;text-shadow:0 0 12px #ff80d0,0 0 24px #ff70bd;animation:messageGlow 2.5s ease-in-out infinite alternate}
+.candles{display:flex;justify-content:center;gap:24px;height:45px;position:relative;z-index:2}
+.candle{position:relative;display:block;width:12px;height:37px;border-radius:4px 4px 3px 3px;background:repeating-linear-gradient(45deg,#fff0f7 0 5px,#ff83c8 5px 9px);box-shadow:inset -3px 0 4px #c94c9a66,0 0 8px #ffb5df88}
+.candle b{position:absolute;left:0;top:-19px;width:13px;height:19px;border-radius:50% 50% 45% 45%;background:radial-gradient(ellipse at 50% 70%,#fff 0 12%,#fff9b0 30%,#ffbd55 60%,#ff70a8 85%);box-shadow:0 0 10px #fff2a8,0 0 22px #ffc86b,0 0 34px #ff8dca;transform-origin:50% 100%;animation:flameFlicker .45s ease-in-out infinite alternate}
+.cake-top{position:relative;width:190px;height:29px;margin:-3px auto 0;border-radius:50%;background:linear-gradient(180deg,#fffaff,#ffc9ed 55%,#d99aff);border:2px solid #fff0fb;box-shadow:0 0 12px #ffb5e8,inset 0 3px 5px #fff}
+.cake-body{box-sizing:border-box;width:190px;height:61px;margin:-9px auto 0;padding-top:17px;border-radius:0 0 17px 17px;background:linear-gradient(100deg,#a96be9,#f5a7e2 48%,#a77be9);color:#fff0fa;font-size:20px;border-bottom:6px solid #f9d9ff;box-shadow:inset 0 -8px 12px #793eaa55,inset 0 5px 8px #ffffff55}
+.cake-plate{width:220px;height:15px;margin:auto;border-radius:50%;background:linear-gradient(#fff,#e8caff 55%,#b987e7);box-shadow:0 5px 12px #0004,0 0 18px #dca7ff88}
+@keyframes cakeFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.025)}}
+@keyframes flameFlicker{from{transform:rotate(-9deg) scale(.88,.96)}to{transform:rotate(9deg) scale(1.12,1.08)}}
+@keyframes messageGlow{from{text-shadow:0 0 8px #ff80d0}to{text-shadow:0 0 18px #ff80d0,0 0 30px #d9a0ff}}
+
 .birthday-particle{
   position:fixed;
   top:-45px;
@@ -155,6 +157,34 @@ button {
   background: linear-gradient(90deg, #a83bcb, #f06bbd 48%, #a83bcb);
   box-shadow: 0 0 24px #ff72c899, inset 0 0 12px #ffffff44;
   z-index: 5;
+}
+
+.floating-photo-layer::before {
+  content: "";
+  position: fixed;
+  left: 50%;
+  bottom: 68px;
+  width: 126px;
+  height: 17px;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+  border: 2px solid #ffe8fa;
+  border-radius: 7px;
+  background: linear-gradient(90deg,#8d35bd,#ff9bd7 48%,#8d35bd);
+  box-shadow: 0 0 18px #ff8bd9, inset 0 2px 5px #ffffff99;
+  z-index: 6;
+  animation: giftLidOpen 5s ease-in-out infinite;
+}
+
+.floating-photo-layer::after {
+  background: linear-gradient(90deg,#8e36bd 0 20%,#ff9bd7 20% 29%,#a83bcb 29% 71%,#ff9bd7 71% 80%,#8e36bd 80%);
+  border: 2px solid #ffe8fa;
+  box-shadow: 0 0 28px #ff72c9, inset 0 0 14px #ffffff66;
+}
+
+@keyframes giftLidOpen {
+  0%, 15%, 75%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0); }
+  30%, 55% { transform: translateX(-50%) rotate(-13deg) translateY(-5px); }
 }
 
 .floating-memory-photo {
