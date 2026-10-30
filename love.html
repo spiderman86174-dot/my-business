@@ -699,22 +699,8 @@ function showSurprise(name, message = ""){
 }
 
 function makeLink(){
-  if (!window.loveQuizPassed) {
-    document.getElementById("creatorStatus").textContent = "पहले लव क्विज़ पूरा करें।";
-    return;
-  }
-  if (window.memoryUploadsInProgress) {
-    document.getElementById("creatorStatus").textContent = "फोटो अपलोड पूरा होने तक इंतज़ार करें।";
-    return;
-  }
-  if (!(window.sharedMemoryPhotos || []).length) {
-    document.getElementById("creatorStatus").textContent = "पहले कम-से-कम एक फोटो अपलोड करें।";
-    return;
-  }
-
   const name = safeName(document.getElementById("name").value);
   const message = document.getElementById("letter").value.trim().slice(0,1000);
-
   if (recipient) {
     const finalName = safeName(name || recipient || params.get("to") || "Birthday Star");
     showSurprise(finalName, message || window.recipientMessage || "");
@@ -746,6 +732,22 @@ function makeLink(){
     });
     return;
   }
+
+  if (!window.loveQuizPassed) {
+    document.getElementById("creatorStatus").textContent = "पहले लव क्विज़ पूरा करें।";
+    return;
+  }
+  if (window.memoryUploadsInProgress) {
+    document.getElementById("creatorStatus").textContent = "फोटो अपलोड पूरा होने तक इंतज़ार करें।";
+    return;
+  }
+  if (!(window.sharedMemoryPhotos || []).length) {
+    document.getElementById("creatorStatus").textContent = "पहले कम-से-कम एक फोटो अपलोड करें।";
+    return;
+  }
+
+
+
 
   if(!name){
     document.getElementById("creatorStatus").textContent =
@@ -1194,7 +1196,9 @@ for(let i=0;i<12;i++){
     const secondPageSong = document.getElementById("secondPageSong");
     const isSharedFinalPage = new URLSearchParams(location.search).has("to");
 
-    if (secondPageSong) {
+    if (recipient) {
+      makeLink();
+    } else if (secondPageSong) {
       secondPageSong.play().catch(() => {});
     }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
