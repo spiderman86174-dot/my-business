@@ -725,12 +725,17 @@ function makeLink(){
     if (!inaamSong) {
       inaamSong = document.createElement("audio");
       inaamSong.id = "inaamLastPageSong";
-      inaamSong.src = "inaam-last-page.mp3?v=inaam2";
-      inaamSong.loop = true;
-      inaamSong.preload = "auto";
       document.body.appendChild(inaamSong);
     }
-    inaamSong.play().catch(() => {});
+    inaamSong.src = "inaam-last-page.mp3?v=inaam2";
+    inaamSong.loop = true;
+    inaamSong.preload = "auto";
+    inaamSong.load();
+    inaamSong.play().catch(error => {
+      console.error("Inaam playback failed:", error);
+      const status = document.getElementById("creatorStatus");
+      if (status) status.textContent = "Music play nahi hua. Final page par dobara tap karke try karein.";
+    });
     return;
   }
 
