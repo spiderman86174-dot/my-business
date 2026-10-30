@@ -310,7 +310,7 @@ body {
 }
 
 
-/* Cinematic opening screen */
+/* Cinematic floral explosion opening */
 #cinematicIntro {
   position: fixed;
   inset: 0;
@@ -318,36 +318,89 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   padding: 24px;
   text-align: center;
-  background: radial-gradient(ellipse at center, #482047, #170d25 65%, #090611);
+  background:
+    radial-gradient(ellipse at 50% 48%, #a52bba 0%, #55145f 35%, #210b35 68%, #090611 100%);
   transition: opacity .9s ease, visibility .9s ease;
+}
+#cinematicIntro::before,
+#cinematicIntro::after {
+  content: "🌸  ✨  🌷  🌸  💮  🌺  ✨  🌸  🌷  💮  🌸  🌺";
+  position: absolute;
+  inset: -20%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 8px;
+  font-size: clamp(25px, 6vw, 48px);
+  line-height: 2.2;
+  letter-spacing: 12px;
+  pointer-events: none;
+  animation: flowerExplosion 18s linear infinite;
+  filter: drop-shadow(0 0 12px #ff71d9);
+}
+#cinematicIntro::after {
+  content: "💗  🌼  🌸  ✨  🌺  🌷  🌸  💮  🌼  🌸";
+  animation-duration: 24s;
+  animation-direction: reverse;
+  opacity: .72;
+  font-size: clamp(20px, 4.5vw, 36px);
 }
 #cinematicIntro.intro-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
-.intro-content { max-width: 520px; animation: introRise 1.4s ease both; }
-.intro-hearts { font-size: 28px; letter-spacing: 12px; animation: introFloat 3s ease-in-out infinite; }
-.intro-title {
-  margin: 22px 0 12px;
-  font: italic 700 clamp(38px, 9vw, 68px) Georgia, serif;
-  color: #f5d58c;
-  text-shadow: 0 0 18px #e8b85b88, 0 0 40px #db75bd66;
+.intro-content {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 520px);
+  padding: 34px 18px;
+  animation: introRise 1.4s ease both;
 }
-.intro-caption { color: #ffe8f4; font-size: 17px; line-height: 1.7; }
+.intro-hearts {
+  font-size: 30px;
+  letter-spacing: 12px;
+  animation: introFloat 3s ease-in-out infinite;
+  color: #ffd9f4;
+  text-shadow: 0 0 20px #ff55d7;
+}
+.intro-title {
+  margin: 22px 0 16px;
+  font: italic 700 clamp(42px, 10vw, 68px) Georgia, serif;
+  color: #fff0ff;
+  text-shadow: 0 0 10px #ff69df, 0 0 25px #ff38d0, 0 0 55px #e900ff;
+}
+.intro-caption {
+  color: #fff0ff;
+  font-size: 18px;
+  line-height: 1.7;
+  text-shadow: 0 0 12px #ff73d9;
+}
 #enterSurprise {
-  margin-top: 25px;
-  padding: 14px 25px;
-  border: 1px solid #f5d58c;
+  margin-top: 28px;
+  padding: 17px 28px;
+  border: 2px solid #ffd5ff;
   border-radius: 999px;
-  background: linear-gradient(120deg, #f4d28b, #bd7aab);
-  color: #271329;
-  font-size: 16px;
+  background: linear-gradient(120deg, #ff45cf, #bd35ed, #ff72c9);
+  color: white;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  box-shadow: 0 0 25px #e8b85b55;
+  box-shadow: 0 0 18px #ff55df, 0 0 42px #e52bff99, inset 0 0 15px #ffffff55;
+  animation: buttonGlow 2s ease-in-out infinite alternate;
+}
+@keyframes flowerExplosion {
+  0% { transform: scale(.55) rotate(0deg); opacity: .35; }
+  45% { opacity: 1; }
+  100% { transform: scale(1.35) rotate(360deg); opacity: .45; }
+}
+@keyframes buttonGlow {
+  from { box-shadow: 0 0 18px #ff55df, 0 0 35px #e52bff88; }
+  to { box-shadow: 0 0 28px #ff9bea, 0 0 65px #e52bff; }
 }
 @keyframes introRise {
   from { opacity: 0; transform: translateY(24px) scale(.97); }
@@ -358,7 +411,7 @@ body {
   50% { transform: translateY(-10px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .intro-content, .intro-hearts { animation: none; }
+  .intro-content, .intro-hearts, #cinematicIntro::before, #cinematicIntro::after, #enterSurprise { animation: none; }
   #cinematicIntro { transition: none; }
 }
 
@@ -531,10 +584,10 @@ body {
 <audio id="openingTheme" src="nermeen-birthday-song.mp3?v=nermeen1" autoplay loop preload="auto"></audio>
 <div id="cinematicIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
   <div class="intro-content">
-    <div class="intro-hearts" aria-hidden="true">♡ ✦ ♥ ✦ ♡</div>
-    <h1 id="introTitle" class="intro-title">Your Favorite Person ❤️</h1>
-    <p class="intro-caption">Some people make the whole world feel magical.<br>This little surprise is for you.</p>
-    <button id="enterSurprise" type="button">Open My Surprise ✨</button>
+    <div class="intro-hearts" aria-hidden="true">♡ ✦ 🌸 ✦ ♡</div>
+    <h1 id="introTitle" class="intro-title">A Little Love<br>Surprise 💜</h1>
+    <p class="intro-caption">A special surprise, made<br>just for you 💗</p>
+    <button id="enterSurprise" type="button">📸 Open Your Surprise</button>
   </div>
 </div>
 
