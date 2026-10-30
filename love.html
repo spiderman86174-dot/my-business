@@ -561,6 +561,130 @@ body {
 
 
 
+
+/* Birthday photo and gift final adjustments */
+audio {
+  display: none !important;
+}
+
+.cake-message {
+  display: none !important;
+}
+
+.floating-photo-layer::before {
+  animation: none !important;
+  transform: translateX(-50%);
+}
+
+.floating-photo-layer.gift-opening::before {
+  animation: giftLidOpenOnce 0.8s ease-out forwards !important;
+}
+
+@keyframes giftLidOpenOnce {
+  from {
+    transform: translateX(-50%) rotate(0deg) translateY(0);
+  }
+  to {
+    transform: translateX(-50%) rotate(-28deg) translateY(-18px);
+  }
+}
+
+.floating-memory-photo.photo-emerging {
+  animation: giftPhotoStay 2.5s ease-out forwards !important;
+}
+
+@keyframes giftPhotoStay {
+  0% {
+    transform: translate(-50%, 38px) scale(.35);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  20% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translate(-50%, -175px) scale(1.8);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+\n
+
+/* MAGICAL PHOTO SEQUENCE V2 */
+.floating-photo-layer {
+  background:
+    radial-gradient(ellipse 48% 18% at 50% 96%, #f58affaa, transparent 75%),
+    radial-gradient(ellipse 30% 35% at 50% 91%, #b94aff77, transparent 75%),
+    linear-gradient(72deg, transparent 43%, #ff8bea33 49%, transparent 54%),
+    linear-gradient(108deg, transparent 43%, #ff8bea33 49%, transparent 54%);
+}
+
+.floating-photo-layer::after {
+  width: min(190px, 52vw) !important;
+  height: 112px !important;
+  bottom: 20px !important;
+  border: 3px solid #ffe6ff !important;
+  border-radius: 13px 13px 19px 19px !important;
+  background: linear-gradient(90deg,#70209e,#e65acb 48%,#8529bb) !important;
+  box-shadow: 0 0 22px #ff8be9, 0 0 55px #d34aff,
+    0 20px 50px #b34aff88, inset 0 0 25px #ffffff66 !important;
+}
+
+.floating-photo-layer::before {
+  width: min(210px, 58vw) !important;
+  height: 27px !important;
+  bottom: 124px !important;
+  border: 3px solid #fff0ff !important;
+  border-radius: 9px !important;
+  background: linear-gradient(90deg,#7926b2,#ffd0f2 48%,#a83acb) !important;
+  box-shadow: 0 0 24px #ff9de9, 0 0 45px #bd4bff !important;
+  transform-origin: 50% 100%;
+}
+
+.floating-photo-layer.gift-opening::before {
+  animation: magicalLidOpenV2 1s ease-out forwards !important;
+}
+
+@keyframes magicalLidOpenV2 {
+  from { transform: translateX(-50%) rotate(0); }
+  to { transform: translateX(-50%) rotate(-35deg) translateY(-24px); }
+}
+
+.floating-memory-photo {
+  width: min(170px, 48vw) !important;
+  height: min(218px, 62vw) !important;
+  object-fit: cover !important;
+  border: 3px solid #ffe4ff !important;
+  box-shadow: 0 0 25px #ff7be9, 0 0 55px #c34aff !important;
+  z-index: 8 !important;
+}
+
+.floating-memory-photo.photo-emerging {
+  animation: magicalPhotoSequenceV2 3.8s ease-in-out forwards !important;
+}
+
+@keyframes magicalPhotoSequenceV2 {
+  0% {
+    transform: translate(-50%, 45px) scale(.25);
+    opacity: 0;
+    filter: blur(8px);
+  }
+  18% {
+    opacity: 1;
+    filter: blur(0);
+  }
+  65% {
+    transform: translate(-50%, -190px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -240px) scale(1.45);
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
 </style>
 </head>
 
@@ -624,7 +748,7 @@ body {
     <audio id="secondPageSong" src="second-page-theme.mp3?v=dekha1" loop preload="none"></audio>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
-      <div class="cake-message">You Make My World Glow ✨</div>
+      
       <div class="candles"><i class="candle"><b></b></i><i class="candle"><b></b></i><i class="candle"><b></b></i></div>
       <div class="cake-top"></div>
       <div class="cake-body">♥　♥　♥</div>
@@ -657,7 +781,7 @@ function createBirthdayEffects(){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const symbols = ["🌸","🌷","✨","💖","🎉","✦","🌺"];
-  for(let i=0;i<32;i++){
+  for(let i=0;i<7;i++){
     const particle = document.createElement("span");
     particle.className = "birthday-particle";
     particle.setAttribute("aria-hidden","true");
@@ -672,6 +796,7 @@ function createBirthdayEffects(){
 }
 
 setInterval(createFloatingHeart,650);
+setInterval(createBirthdayEffects, 700);
 const params = new URLSearchParams(location.search);
 const recipient = params.get("to");
 let audioContext = null;
@@ -685,8 +810,7 @@ function safeName(value){
 function showSurprise(name, message = ""){
   document.getElementById("introTitle").textContent = "Happy Birthday " + name + " ❤️";
   document.querySelector(".cinematic-name").textContent = "Happy Birthday " + name + " ❤️";
-  document.querySelector(".cake-message").textContent =
-    "Happy Birthday " + name + " ❤️✨";
+  
   document.getElementById("creator").style.display = "none";
   document.getElementById("surprise").style.display = "block";
   document.getElementById("greeting").textContent =
@@ -720,13 +844,13 @@ function makeLink(){
     inaamSong.src = "inaam-last-page.mp3?v=inaam3";
     inaamSong.loop = true;
     inaamSong.preload = "auto";
-    inaamSong.controls = true;
+    inaamSong.controls = false;
     inaamSong.volume = 1;
     inaamSong.load();
 
     inaamSong.play().catch(error => {
       console.error("Inaam playback failed:", error);
-      inaamSong.controls = true;
+      inaamSong.controls = false;
       const status = document.getElementById("creatorStatus");
       if (status) status.textContent = "Inaam sunne ke liye music player par Play dabayein.";
     });
@@ -930,17 +1054,26 @@ window.memoryUploadsInProgress = false;
 
       function showNextGiftPhoto() {
         const img = photoElements[currentPhoto];
-        img.style.setProperty("--photo-drift", `${Math.random() * 80 - 40}px`);
-        img.style.setProperty("--photo-rotation", `${Math.random() * 24 - 12}deg`);
+
+        photoElements.forEach(photo => {
+          if (photo !== img) {
+            photo.classList.remove("photo-emerging");
+            photo.style.opacity = "0";
+          }
+        });
+
+        floatingLayer.classList.add("gift-opening");
+        img.style.setProperty("--photo-drift", "0px");
+        img.style.setProperty("--photo-rotation", "0deg");
         img.classList.remove("photo-emerging");
+        img.style.opacity = "0";
         void img.offsetWidth;
         img.classList.add("photo-emerging");
 
         img.addEventListener("animationend", function finished() {
-          img.classList.remove("photo-emerging");
           img.style.opacity = "0";
           currentPhoto = (currentPhoto + 1) % photoElements.length;
-          setTimeout(showNextGiftPhoto, 250);
+          setTimeout(showNextGiftPhoto, 3500);
         }, { once: true });
       }
 
@@ -1196,7 +1329,7 @@ for(let i=0;i<12;i++){
     const secondPageSong = document.getElementById("secondPageSong");
     const isSharedFinalPage = new URLSearchParams(location.search).has("to");
 
-    if (recipient) {
+    if (isSharedFinalPage) {
       makeLink();
     } else if (secondPageSong) {
       secondPageSong.play().catch(() => {});
