@@ -716,25 +716,33 @@ function makeLink(){
   const message = document.getElementById("letter").value.trim().slice(0,1000);
 
   if (recipient) {
-    showSurprise(name || recipient, message || window.recipientMessage || "");
+    const finalName = safeName(name || recipient || params.get("to") || "Birthday Star");
+    showSurprise(finalName, message || window.recipientMessage || "");
     const photoLayer = window.recipientFloatingLayer;
     if (photoLayer) photoLayer.style.visibility = "visible";
+
     const secondPageSong = document.getElementById("secondPageSong");
     if (secondPageSong) secondPageSong.pause();
+
     let inaamSong = document.getElementById("inaamLastPageSong");
     if (!inaamSong) {
       inaamSong = document.createElement("audio");
       inaamSong.id = "inaamLastPageSong";
       document.body.appendChild(inaamSong);
     }
-    inaamSong.src = "inaam-last-page.mp3?v=inaam2";
+
+    inaamSong.src = "inaam-last-page.mp3?v=inaam3";
     inaamSong.loop = true;
     inaamSong.preload = "auto";
+    inaamSong.controls = true;
+    inaamSong.volume = 1;
     inaamSong.load();
+
     inaamSong.play().catch(error => {
       console.error("Inaam playback failed:", error);
+      inaamSong.controls = true;
       const status = document.getElementById("creatorStatus");
-      if (status) status.textContent = "Music play nahi hua. Final page par dobara tap karke try karein.";
+      if (status) status.textContent = "Inaam sunne ke liye music player par Play dabayein.";
     });
     return;
   }
