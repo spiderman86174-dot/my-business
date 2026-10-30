@@ -562,15 +562,9 @@ body {
 
     <section class="memory-box" aria-labelledby="memoryHeading" style="display:none">
       <h2 id="memoryHeading">📸 Photo Memories</h2>
-      <p class="small">Choose up to 12 photos together, or add them one at a time.</p>
-      <div id="photoPickerActions" class="photo-picker-actions">
-        <button id="selectManyPhotos" type="button">Select up to 12 together 📸</button>
-        <button id="selectOnePhoto" class="secondary" type="button">Add one photo at a time ➕</button>
-      </div>
+      <p class="small">Choose your favourite photos and add little captions.</p>
       <input id="memoryPhotos" type="file" accept="image/*" multiple
-        aria-label="Choose up to 12 memory photos" hidden>
-      <input id="memoryPhotoSingle" type="file" accept="image/*"
-        aria-label="Choose one memory photo" hidden>
+        aria-label="Choose memory photos">
       <p id="memoryStatus" class="small" aria-live="polite">No photos selected yet.</p>
       <div id="memoryGallery" class="memory-grid"></div>
       <p class="small">Photos upload to Cloudinary and may be viewed by anyone with the shared link. Do not upload private photos.</p>
@@ -794,21 +788,13 @@ window.sharedMemoryPhotos = [];
 window.memoryUploadsInProgress = false;
 (function setupMemoryGallery(){
   const picker = document.getElementById("memoryPhotos");
-  const singlePicker = document.getElementById("memoryPhotoSingle");
-  const pickerActions = document.getElementById("photoPickerActions");
-  const selectManyButton = document.getElementById("selectManyPhotos");
-  const selectOneButton = document.getElementById("selectOnePhoto");
   const gallery = document.getElementById("memoryGallery");
   const status = document.getElementById("memoryStatus");
-  if (!picker || !singlePicker || !pickerActions || !selectManyButton || !selectOneButton || !gallery || !status) return;
-  selectManyButton.addEventListener("click", () => picker.click());
-  selectOneButton.addEventListener("click", () => singlePicker.click());
+  if (!picker || !gallery || !status) return;
 
   const query = new URLSearchParams(location.search);
   if (query.has("to")) {
     picker.hidden = true;
-    singlePicker.hidden = true;
-    pickerActions.hidden = true;
     const sharedSection = document.getElementById("sharedMemories");
     const greeting = document.getElementById("greeting");
     const letterText = document.getElementById("letterText");
@@ -952,13 +938,9 @@ window.memoryUploadsInProgress = false;
     }
   }
 
-  async function uploadSelectedFiles(filePicker) {
-    if (window.memoryUploadsInProgress) {
-      status.textContent = "Please wait for the current uploads to finish.";
-      return;
-    }
-    const files = Array.from(filePicker.files || []);
-    filePicker.value = "";
+  picker.addEventListener("change", async () => {
+    const files = Array.from(picker.files || []);
+    picker.value = "";
     const room = Math.max(0, 12 - memories.length);
     const chosen = files.filter(f => f.type.startsWith("image/") &&
       f.size > 0 && f.size <= 8 * 1024 * 1024).slice(0, room);
@@ -969,8 +951,6 @@ window.memoryUploadsInProgress = false;
     }
 
     window.memoryUploadsInProgress = true;
-    selectManyButton.disabled = true;
-    selectOneButton.disabled = true;
     let uploaded = 0;
     for (const file of chosen) {
       const m = {url: URL.createObjectURL(file), caption: "", uploaded: false};
@@ -1004,8 +984,6 @@ window.memoryUploadsInProgress = false;
       }
     }
     window.memoryUploadsInProgress = false;
-    selectManyButton.disabled = false;
-    selectOneButton.disabled = false;
     syncPhotos();
     render();
     if (uploaded) {
@@ -1014,10 +992,7 @@ window.memoryUploadsInProgress = false;
         document.getElementById("openSurpriseButton").style.display = "";
       }
     }
-  }
-
-  picker.addEventListener("change", () => uploadSelectedFiles(picker));
-  singlePicker.addEventListener("change", () => uploadSelectedFiles(singlePicker));
+  });
 
   window.addEventListener("pagehide", () => {
     memories.forEach(m => {
