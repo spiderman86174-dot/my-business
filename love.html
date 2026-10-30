@@ -576,6 +576,42 @@ body {
   }
 }
 
+
+/* Continuous falling flowers and sparkling petals */
+#flowerRain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+#flowerRain span {
+  position: absolute;
+  top: -12vh;
+  left: var(--left);
+  font-size: var(--size);
+  opacity: 0;
+  filter: drop-shadow(0 0 7px #ffb5ef);
+  animation: petalFall var(--duration) var(--delay) linear infinite;
+}
+@keyframes petalFall {
+  0% {
+    transform: translate3d(0, -5vh, 0) rotate(0deg) scale(.7);
+    opacity: 0;
+    filter: brightness(1) drop-shadow(0 0 3px #ffb5ef);
+  }
+  12% { opacity: .95; }
+  45% {
+    filter: brightness(1.8) drop-shadow(0 0 15px #fff0ff);
+  }
+  85% { opacity: .85; }
+  100% {
+    transform: translate3d(var(--drift), 120vh, 0) rotate(540deg) scale(1.2);
+    opacity: 0;
+    filter: brightness(1.5) drop-shadow(0 0 12px #ffb5ef);
+  }
+}
+
 </style>
 </head>
 
@@ -583,6 +619,7 @@ body {
 
 <audio id="openingTheme" src="nermeen-birthday-song.mp3?v=nermeen1" autoplay loop preload="auto"></audio>
 <div id="cinematicIntro" role="dialog" aria-modal="true" aria-labelledby="introTitle">
+  <div id="flowerRain" aria-hidden="true"></div>
   <div class="intro-content">
     <div class="intro-hearts" aria-hidden="true">♡ ✦ 🌸 ✦ ♡</div>
     <h1 id="introTitle" class="intro-title">A Little Love<br>Surprise 💜</h1>
@@ -1190,6 +1227,21 @@ for(let i=0;i<12;i++){
   const intro = document.getElementById("cinematicIntro");
   const enter = document.getElementById("enterSurprise");
   if (!intro || !enter) return;
+
+  const rain = document.getElementById("flowerRain");
+  if (rain) {
+    const flowers = ["🌸", "🌺", "🌷", "🌼", "💮", "✨", "✧", "💗"];
+    for (let i = 0; i < 38; i++) {
+      const petal = document.createElement("span");
+      petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+      petal.style.setProperty("--left", Math.random() * 100 + "%");
+      petal.style.setProperty("--size", (15 + Math.random() * 22) + "px");
+      petal.style.setProperty("--duration", (7 + Math.random() * 9) + "s");
+      petal.style.setProperty("--delay", (-Math.random() * 16) + "s");
+      petal.style.setProperty("--drift", (Math.random() * 150 - 75) + "px");
+      rain.appendChild(petal);
+    }
+  }
   const closeIntro = () => {
     const openingTheme = document.getElementById("openingTheme");
     if (openingTheme) {
