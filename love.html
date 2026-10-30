@@ -1231,13 +1231,14 @@ for(let i=0;i<12;i++){
   const rain = document.getElementById("flowerRain");
   if (rain) {
     const flowers = ["🌸", "🌺", "🌷", "🌼", "💮", "✨", "✧", "💗"];
-    for (let i = 0; i < 38; i++) {
+
+    for (let i = 0; i < 65; i++) {
       const petal = document.createElement("span");
       petal.textContent = flowers[Math.floor(Math.random() * flowers.length)];
       petal.style.setProperty("--left", Math.random() * 100 + "%");
       petal.style.setProperty("--size", (15 + Math.random() * 22) + "px");
-      petal.style.setProperty("--duration", (7 + Math.random() * 9) + "s");
-      petal.style.setProperty("--delay", (-Math.random() * 16) + "s");
+      petal.style.setProperty("--duration", (16 + Math.random() * 8) + "s");
+      petal.style.setProperty("--delay", (-Math.random() * 24) + "s");
       petal.style.setProperty("--drift", (Math.random() * 150 - 75) + "px");
       rain.appendChild(petal);
     }
