@@ -178,31 +178,28 @@ button {
 
 @keyframes gift-photo-emerge {
   0% {
-    transform: translate(-50%, 38px) scale(.45) rotate(0deg);
+    transform: translate(-50%, 38px) scale(.35) rotate(0deg);
     opacity: 0;
-    filter: blur(5px);
+    filter: blur(8px);
   }
   12% {
     opacity: 1;
     filter: blur(0);
   }
-  82% {
-    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
-      scale(1) rotate(var(--photo-rotation, 0deg));
+  50% {
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -85px) scale(1.15) rotate(var(--photo-rotation, 0deg));
     opacity: 1;
     filter: blur(0);
   }
-  96% {
-    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
-      scale(1) rotate(var(--photo-rotation, 0deg));
-    opacity: 1;
-    filter: blur(0);
+  80% {
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -150px) scale(1.65) rotate(var(--photo-rotation, 0deg));
+    opacity: .9;
+    filter: blur(2px);
   }
   100% {
-    transform: translate(calc(-50% + var(--photo-drift, 0px)), -105px)
-      scale(1) rotate(var(--photo-rotation, 0deg));
+    transform: translate(calc(-50% + var(--photo-drift, 0px)), -190px) scale(2.1) rotate(var(--photo-rotation, 0deg));
     opacity: 0;
-    filter: blur(5px);
+    filter: blur(24px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
