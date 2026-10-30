@@ -715,6 +715,25 @@ function makeLink(){
   const name = safeName(document.getElementById("name").value);
   const message = document.getElementById("letter").value.trim().slice(0,1000);
 
+  if (recipient) {
+    showSurprise(name || recipient, message || window.recipientMessage || "");
+    const photoLayer = window.recipientFloatingLayer;
+    if (photoLayer) photoLayer.style.visibility = "visible";
+    const secondPageSong = document.getElementById("secondPageSong");
+    if (secondPageSong) secondPageSong.pause();
+    let inaamSong = document.getElementById("inaamLastPageSong");
+    if (!inaamSong) {
+      inaamSong = document.createElement("audio");
+      inaamSong.id = "inaamLastPageSong";
+      inaamSong.src = "inaam-last-page.mp3?v=inaam1";
+      inaamSong.loop = true;
+      inaamSong.preload = "auto";
+      document.body.appendChild(inaamSong);
+    }
+    inaamSong.play().catch(() => {});
+    return;
+  }
+
   if(!name){
     document.getElementById("creatorStatus").textContent =
       "Please enter a name first.";
@@ -1106,27 +1125,6 @@ for(let i=0;i<12;i++){
       progressEl.textContent = "10 में से 10 सही! अब फोटो यादें अनलॉक हो गई हैं!";
       feedbackEl.textContent = "अपनी फोटो यादों का आनंद लें! 💗";
 
-      if (recipient) {
-        memoryBox.style.display = "none";
-        const photoLayer = window.recipientFloatingLayer;
-        if (photoLayer) photoLayer.style.visibility = "visible";
-
-        showSurprise(recipient, window.recipientMessage || "");
-
-        const secondPageSong = document.getElementById("secondPageSong");
-        if (secondPageSong) secondPageSong.pause();
-
-        let inaamSong = document.getElementById("inaamLastPageSong");
-        if (!inaamSong) {
-          inaamSong = document.createElement("audio");
-          inaamSong.id = "inaamLastPageSong";
-          inaamSong.src = "inaam-last-page.mp3?v=inaam1";
-          inaamSong.loop = true;
-          inaamSong.preload = "auto";
-          document.body.appendChild(inaamSong);
-        }
-        inaamSong.play().catch(() => {});
-      }
       return;
     }
     if (used.size === pool.length) {
