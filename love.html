@@ -685,6 +685,23 @@ audio {
   }
 }
 
+
+/* FINAL GIFT BOX SIZE: HALF SIZE */
+.floating-photo-layer::after {
+  width: min(95px, 26vw) !important;
+  height: 56px !important;
+  bottom: 20px !important;
+}
+.floating-photo-layer::before {
+  width: min(105px, 29vw) !important;
+  height: 14px !important;
+  bottom: 76px !important;
+}
+@keyframes magicalLidOpenV2 {
+  from { transform: translateX(-50%) rotate(0); }
+  to { transform: translateX(-50%) rotate(-35deg) translateY(-12px); }
+}
+
 </style>
 </head>
 
