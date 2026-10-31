@@ -776,6 +776,32 @@ audio {
   }
 }
 
+
+/* FRONT-FACING GIFT LID OPENING */
+.floating-photo-layer {
+  perspective: 500px !important;
+}
+
+.floating-photo-layer::before {
+  transform-origin: 50% 0% !important;
+  transform-style: preserve-3d !important;
+  backface-visibility: hidden !important;
+}
+
+@keyframes premiumGiftLidCycle {
+  0% {
+    transform: translateX(-50%) rotateX(0deg);
+  }
+  18% {
+    transform: translateX(-50%) rotateX(65deg);
+  }
+  90% {
+    transform: translateX(-50%) rotateX(65deg);
+  }
+  100% {
+    transform: translateX(-50%) rotateX(0deg);
+  }
+}
 </style>
 </head>
 
