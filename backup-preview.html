@@ -951,17 +951,16 @@ function createFloatingHeart(){
 
 function createBirthdayEffects(){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-  const symbols = ["🌸","🌷","✨","💖","🎉","✦","🌺"];
-  for(let i=0;i<3;i++){
+  const symbols = ["🌸","🌷","🌺","🌼","💮","✿"];
+  for(let i=0;i<12;i++){
     const particle = document.createElement("span");
     particle.className = "birthday-particle";
     particle.setAttribute("aria-hidden","true");
     particle.textContent = symbols[Math.floor(Math.random()*symbols.length)];
     particle.style.left = Math.random()*100 + "vw";
-    particle.style.fontSize = (14 + Math.random()*18) + "px";
-    particle.style.setProperty("--duration",(4 + Math.random()*5) + "s");
-    particle.style.animationDelay = (Math.random()*2) + "s";
+    particle.style.fontSize = (18 + Math.random()*22) + "px";
+    particle.style.setProperty("--duration",(5 + Math.random()*5) + "s");
+    particle.style.animationDelay = (Math.random()*1.5) + "s";
     document.body.appendChild(particle);
     particle.addEventListener("animationend",()=>particle.remove(),{once:true});
   }
@@ -972,7 +971,7 @@ let birthdayEffectsTimer = null;
 
 function startBirthdayEffects(){
   if (!floatingHeartsTimer) floatingHeartsTimer = setInterval(createFloatingHeart, 1600);
-  if (!birthdayEffectsTimer) birthdayEffectsTimer = setInterval(createBirthdayEffects, 1800);
+  if (!birthdayEffectsTimer) birthdayEffectsTimer = setInterval(createBirthdayEffects, 400);
 }
 
 if (new URLSearchParams(location.search).get("stage") !== "quiz") {
