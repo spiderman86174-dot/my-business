@@ -726,17 +726,20 @@ audio {
 }
 
 .floating-photo-layer.gift-opening::before {
-  animation: premiumGiftLidCycle 4.8s ease-in-out forwards !important;
+  animation: premiumGiftLidCycle 6s ease-in-out forwards !important;
 }
 
 @keyframes premiumGiftLidCycle {
-  0%, 12% {
+  0% {
     transform: translateX(-50%) rotate(0deg) translateY(0);
   }
-  35%, 65% {
+  18% {
     transform: translateX(-50%) rotate(-35deg) translateY(-12px);
   }
-  88%, 100% {
+  90% {
+    transform: translateX(-50%) rotate(-35deg) translateY(-12px);
+  }
+  100% {
     transform: translateX(-50%) rotate(0deg) translateY(0);
   }
 }
@@ -1157,17 +1160,20 @@ window.memoryUploadsInProgress = false;
         img.classList.remove("photo-emerging");
         img.style.opacity = "0";
         void img.offsetWidth;
-        img.classList.add("photo-emerging");
 
         img.addEventListener("animationend", function finished() {
           img.classList.remove("photo-emerging");
           img.style.opacity = "0";
-
           floatingLayer.classList.remove("gift-opening");
 
           currentPhoto = (currentPhoto + 1) % photoElements.length;
           setTimeout(showNextGiftPhoto, 1400);
         }, { once: true });
+
+        // Lid reaches fully open at 18% of 6 seconds = 1.08 seconds.
+        setTimeout(() => {
+          img.classList.add("photo-emerging");
+        }, 1080);
       }
 
       showNextGiftPhoto();
