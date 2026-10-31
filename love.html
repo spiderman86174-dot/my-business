@@ -702,6 +702,77 @@ audio {
   to { transform: translateX(-50%) rotate(-35deg) translateY(-12px); }
 }
 
+
+/* PREMIUM REPEATING GIFT OPEN-CLOSE SEQUENCE */
+.floating-photo-layer::after {
+  background:
+    linear-gradient(90deg,
+      #552080 0 17%,
+      #f8d58a 17% 23%,
+      #a43acb 23% 77%,
+      #f8d58a 77% 83%,
+      #552080 83%) !important;
+  border: 2px solid #ffe8bd !important;
+  box-shadow:
+    0 0 18px #e8a5ff,
+    0 0 35px #a94bdb,
+    inset 0 0 16px #ffffff55 !important;
+}
+
+.floating-photo-layer::before {
+  background: linear-gradient(90deg,#6e279b,#f9d58e 48%,#9b38bd) !important;
+  border: 2px solid #fff0c9 !important;
+  box-shadow: 0 0 20px #e8a5ff, inset 0 2px 6px #ffffff99 !important;
+}
+
+.floating-photo-layer.gift-opening::before {
+  animation: premiumGiftLidCycle 4.8s ease-in-out forwards !important;
+}
+
+@keyframes premiumGiftLidCycle {
+  0%, 12% {
+    transform: translateX(-50%) rotate(0deg) translateY(0);
+  }
+  35%, 65% {
+    transform: translateX(-50%) rotate(-35deg) translateY(-12px);
+  }
+  88%, 100% {
+    transform: translateX(-50%) rotate(0deg) translateY(0);
+  }
+}
+
+.floating-memory-photo.photo-emerging {
+  animation: premiumPhotoReturn 4.8s ease-in-out forwards !important;
+}
+
+@keyframes premiumPhotoReturn {
+  0% {
+    transform: translate(-50%, 45px) scale(.25);
+    opacity: 0;
+    filter: blur(7px);
+  }
+  18% {
+    transform: translate(-50%, -75px) scale(.85);
+    opacity: 1;
+    filter: blur(0);
+  }
+  38%, 58% {
+    transform: translate(-50%, -190px) scale(1.15);
+    opacity: 1;
+    filter: blur(0);
+  }
+  82% {
+    transform: translate(-50%, -65px) scale(.75);
+    opacity: 1;
+    filter: blur(0);
+  }
+  100% {
+    transform: translate(-50%, 42px) scale(.2);
+    opacity: 0;
+    filter: blur(5px);
+  }
+}
+
 </style>
 </head>
 
@@ -1073,13 +1144,14 @@ window.memoryUploadsInProgress = false;
         const img = photoElements[currentPhoto];
 
         photoElements.forEach(photo => {
-          if (photo !== img) {
-            photo.classList.remove("photo-emerging");
-            photo.style.opacity = "0";
-          }
+          photo.classList.remove("photo-emerging");
+          photo.style.opacity = "0";
         });
 
+        floatingLayer.classList.remove("gift-opening");
+        void floatingLayer.offsetWidth;
         floatingLayer.classList.add("gift-opening");
+
         img.style.setProperty("--photo-drift", "0px");
         img.style.setProperty("--photo-rotation", "0deg");
         img.classList.remove("photo-emerging");
@@ -1088,9 +1160,13 @@ window.memoryUploadsInProgress = false;
         img.classList.add("photo-emerging");
 
         img.addEventListener("animationend", function finished() {
+          img.classList.remove("photo-emerging");
           img.style.opacity = "0";
+
+          floatingLayer.classList.remove("gift-opening");
+
           currentPhoto = (currentPhoto + 1) % photoElements.length;
-          setTimeout(showNextGiftPhoto, 3500);
+          setTimeout(showNextGiftPhoto, 1400);
         }, { once: true });
       }
 
