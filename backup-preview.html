@@ -952,7 +952,7 @@ function createFloatingHeart(){
 function createBirthdayEffects(){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const symbols = ["🌸","🌷","🌺","🌼","💮","✿"];
-  for(let i=0;i<12;i++){
+  for(let i=0;i<4;i++){
     const particle = document.createElement("span");
     particle.className = "birthday-particle";
     particle.setAttribute("aria-hidden","true");
@@ -971,7 +971,7 @@ let birthdayEffectsTimer = null;
 
 function startBirthdayEffects(){
   if (!floatingHeartsTimer) floatingHeartsTimer = setInterval(createFloatingHeart, 1600);
-  if (!birthdayEffectsTimer) birthdayEffectsTimer = setInterval(createBirthdayEffects, 400);
+  if (!birthdayEffectsTimer) birthdayEffectsTimer = setInterval(createBirthdayEffects, 1140);
 }
 
 if (new URLSearchParams(location.search).get("stage") !== "quiz") {
