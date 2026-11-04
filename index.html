@@ -377,8 +377,31 @@ body {
   position: relative;
   z-index: 2;
   width: min(100%, 520px);
-  padding: 34px 18px;
+  max-height: 100dvh;
+  overflow-y: auto;
+  padding: 18px 14px 22px;
   animation: introRise 1.4s ease both;
+  scrollbar-width: none;
+}
+.intro-content::-webkit-scrollbar {
+  display: none;
+}
+.intro-content .founder-social-footer {
+  margin: 12px auto 2px;
+  padding-top: 9px;
+  gap: 4px;
+}
+.intro-content .founder-social-icons {
+  gap: 11px;
+  margin-top: 6px;
+}
+.intro-content .founder-social-icons a {
+  width: 34px;
+  height: 34px;
+}
+.intro-content .founder-social-icons svg {
+  width: 17px;
+  height: 17px;
 }
 .intro-hearts {
   font-size: 30px;
@@ -1038,7 +1061,7 @@ audio {
 
 <div class="card">
   <div style="font-size:42px">💌 💗 ✨</div>
-  <h1>My Heart Has a Favorite Person…<br><span class="cinematic-name">Your Favorite Person ❤️</span></h1>
+  <h1>My Heart Has a Favorite Person…<br><span class="cinematic-name">Happy Birthday ❤️</span></h1>
 
 
   <section id="creator">
@@ -1089,7 +1112,7 @@ audio {
       
       <div class="candles"><i class="candle"><b></b></i><i class="candle"><b></b></i><i class="candle"><b></b></i></div>
       <div class="cake-top"></div>
-      <div class="cake-body">♥　♥　♥</div>
+      <div class="cake-body" id="cakeName">♥　♥　♥</div>
       <div class="cake-plate"></div>
     </div>
 
@@ -1155,6 +1178,9 @@ function safeName(value){
 }
 
 function showSurprise(name, message = ""){
+  const oldIntro = document.getElementById("cinematicIntro");
+  if (oldIntro) oldIntro.remove();
+
   document.getElementById("introTitle").textContent = "Happy Birthday " + name + " ❤️";
   document.querySelector(".cinematic-name").textContent = "Happy Birthday " + name + " ❤️";
   
@@ -1172,6 +1198,16 @@ function showSurprise(name, message = ""){
   }, 650);
   document.getElementById("greeting").textContent =
     "A special surprise for " + name + " 💗";
+
+  const cakeName = document.getElementById("cakeName");
+  if (cakeName) {
+    cakeName.textContent = name;
+    cakeName.style.fontSize = Math.max(10, Math.min(18, 170 / Math.max(name.length, 1))) + "px";
+    cakeName.style.whiteSpace = "nowrap";
+    cakeName.style.overflow = "hidden";
+    cakeName.style.textOverflow = "ellipsis";
+    cakeName.style.boxSizing = "border-box";
+  }
   document.getElementById("letterText").textContent = message;
   document.getElementById("letterText").style.display =
     message ? "block" : "none";
