@@ -87,6 +87,19 @@ body {
   box-shadow: 0 24px 80px #13051f88, 0 0 35px #ff8cdd20,
               inset 0 1px #ffffff40;
 }
+
+#creator .creator-share-button {
+  position: relative;
+  display: block;
+  width: auto;
+  min-height: 42px;
+  padding: 9px 15px;
+  margin: 8px 0 14px auto;
+  border-radius: 20px;
+  font-size: 13px;
+  z-index: 5;
+}
+
 #creator, #surprise {
   position: relative;
 }
@@ -802,6 +815,48 @@ audio {
     transform: translateX(-50%) rotateX(0deg);
   }
 }
+
+/* PHOTO EMERGES THROUGH THE GIFT OPENING */
+.floating-memory-photo.photo-emerging {
+  z-index: 7 !important;
+  animation: premiumPhotoReturn 4.8s linear forwards !important;
+}
+
+@keyframes premiumPhotoReturn {
+  0% {
+    transform: translate(-50%, 45px) scale(.20);
+    opacity: 0;
+    filter: blur(7px);
+  }
+  8% {
+    transform: translate(-50%, 20px) scale(.32);
+    opacity: .65;
+    filter: blur(3px);
+  }
+  18% {
+    transform: translate(-50%, -65px) scale(.50);
+    opacity: 1;
+    filter: blur(0);
+  }
+  55% {
+    transform: translate(-50%, -175px) scale(1.15);
+    opacity: 1;
+    filter: blur(0);
+  }
+  78% {
+    transform: translate(-50%, -220px) scale(1.65);
+    opacity: .65;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translate(-50%, -270px) scale(2.1);
+    opacity: 0;
+    filter: blur(9px);
+  }
+}
+
+
+
 </style>
 </head>
 
@@ -823,6 +878,7 @@ audio {
 
 
   <section id="creator">
+    <button id="creatorShareButton" class="creator-share-button" type="button" onclick="createCreatorShareLink()">🔗 Create share link</button>
     <input id="name" maxlength="50"
       placeholder="Enter your girlfriend's name">
     <textarea id="letter" maxlength="1000" rows="4"
@@ -862,6 +918,7 @@ audio {
 
 
     <h2 id="greeting"></h2>
+    <button id="continueToMemories" type="button" style="display:none" onclick="makeLink()">🎁 Open photo memories</button>
     <audio id="secondPageSong" src="second-page-theme.mp3?v=dekha1" loop preload="none"></audio>
     <p id="letterText" style="white-space:pre-wrap;overflow-wrap:anywhere"></p>
     <div id="birthdayCake" class="birthday-cake" role="img" aria-label="Birthday cake with glowing candles">
@@ -878,6 +935,8 @@ audio {
 
   </section>
   <p id="status" class="small"></p>
+
+
 </div>
 
 <script>
@@ -898,7 +957,7 @@ function createBirthdayEffects(){
   if(window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const symbols = ["🌸","🌷","✨","💖","🎉","✦","🌺"];
-  for(let i=0;i<7;i++){
+  for(let i=0;i<3;i++){
     const particle = document.createElement("span");
     particle.className = "birthday-particle";
     particle.setAttribute("aria-hidden","true");
@@ -912,8 +971,17 @@ function createBirthdayEffects(){
   }
 }
 
-setInterval(createFloatingHeart,650);
-setInterval(createBirthdayEffects, 700);
+let floatingHeartsTimer = null;
+let birthdayEffectsTimer = null;
+
+function startBirthdayEffects(){
+  if (!floatingHeartsTimer) floatingHeartsTimer = setInterval(createFloatingHeart, 1600);
+  if (!birthdayEffectsTimer) birthdayEffectsTimer = setInterval(createBirthdayEffects, 1800);
+}
+
+if (!["quiz", "welcome"].includes(new URLSearchParams(location.search).get("stage"))) {
+  startBirthdayEffects();
+}
 const params = new URLSearchParams(location.search);
 const recipient = params.get("to");
 let audioContext = null;
@@ -926,6 +994,8 @@ function safeName(value){
 
 function showSurprise(name, message = ""){
   document.getElementById("introTitle").textContent = "Happy Birthday " + name + " ❤️";
+  const oldIntro = document.getElementById("cinematicIntro");
+  if (oldIntro) oldIntro.remove();
   document.querySelector(".cinematic-name").textContent = "Happy Birthday " + name + " ❤️";
   
   document.getElementById("creator").style.display = "none";
@@ -937,6 +1007,46 @@ function showSurprise(name, message = ""){
     message ? "block" : "none";
   document.title = "A Surprise for " + name;
   createBirthdayEffects();
+  startBirthdayEffects();
+}
+
+async function createCreatorShareLink(){
+  const name = safeName(document.getElementById("name").value);
+  const message = document.getElementById("letter").value.trim().slice(0,1000);
+  const status = document.getElementById("creatorStatus");
+
+  if (!window.loveQuizPassed) {
+    status.textContent = "पहले अपना quiz पूरा करें।";
+    return;
+  }
+  if (window.memoryUploadsInProgress) {
+    status.textContent = "फोटो upload पूरा होने तक इंतज़ार करें।";
+    return;
+  }
+  const photos = window.sharedMemoryPhotos || [];
+  if (!photos.length) {
+    status.textContent = "पहले कम-से-कम एक photo upload करें।";
+    return;
+  }
+  if (!name) {
+    status.textContent = "पहले नाम लिखें।";
+    return;
+  }
+
+  const url = new URL("https://spiderman86174-dot.github.io/my-business/love.html");
+  url.searchParams.set("to", name);
+  url.searchParams.set("stage", "welcome");
+  if (message) url.searchParams.set("message", message);
+  else url.searchParams.delete("message");
+  url.searchParams.set("photos", JSON.stringify(photos));
+
+  try {
+    await navigator.clipboard.writeText(url.href);
+    status.textContent = "Share link copied! 💗 अब इसे भेज सकते हैं।";
+  } catch (e) {
+    window.prompt("Copy your surprise link:", url.href);
+    status.textContent = "ऊपर दिख रहे box से link copy करें।";
+  }
 }
 
 function makeLink(){
@@ -947,6 +1057,12 @@ function makeLink(){
     showSurprise(finalName, message || window.recipientMessage || "");
     const photoLayer = window.recipientFloatingLayer;
     if (photoLayer) photoLayer.style.visibility = "visible";
+    if (typeof window.startRecipientPhotos === "function") {
+      window.startRecipientPhotos();
+      window.startRecipientPhotos = null;
+    }
+    const continueButton = document.getElementById("continueToMemories");
+    if (continueButton) continueButton.style.display = "none";
 
     const secondPageSong = document.getElementById("secondPageSong");
     if (secondPageSong) secondPageSong.pause();
@@ -1107,7 +1223,17 @@ window.memoryUploadsInProgress = false;
 
   const query = new URLSearchParams(location.search);
   if (query.has("to")) {
-    document.getElementById("creator").style.display = "none";
+    const isWelcomeStage = query.get("stage") === "welcome";
+    const isQuizStage = query.get("stage") === "quiz";
+    const isPreBirthdayStage = isWelcomeStage || isQuizStage;
+    if (!isQuizStage) document.getElementById("creator").style.display = "none";
+    if (isQuizStage) {
+      document.getElementById("name").style.display = "none";
+      document.getElementById("letter").style.display = "none";
+      document.getElementById("creatorShareButton").style.display = "none";
+      document.getElementById("openSurpriseButton").style.display = "none";
+      document.getElementById("creatorStatus").style.display = "none";
+    }
     picker.hidden = true;
     const sharedSection = document.getElementById("sharedMemories");
     const greeting = document.getElementById("greeting");
@@ -1116,14 +1242,19 @@ window.memoryUploadsInProgress = false;
     const cake = document.getElementById("birthdayCake");
 
     sharedSection.style.display = "none";
-    greeting.style.display = "none";
-    letterText.style.display = "none";
     status.style.display = "none";
 
     const surprise = document.getElementById("surprise");
-    surprise.style.display = "flex";
-    surprise.style.flexDirection = "column";
-    cake.style.order = "-1";
+    if (isPreBirthdayStage) {
+      surprise.style.display = "none";
+      document.getElementById("continueToMemories").style.display = "none";
+    } else {
+      greeting.style.display = "none";
+      letterText.style.display = "none";
+      surprise.style.display = "flex";
+      surprise.style.flexDirection = "column";
+      cake.style.order = "-1";
+    }
 
     let photos = [];
     try {
@@ -1165,6 +1296,7 @@ window.memoryUploadsInProgress = false;
     }
 
     document.body.appendChild(floatingLayer);
+    if (isQuizStage) floatingLayer.style.visibility = "hidden";
 
     if (photoElements.length) {
       let currentPhoto = 0;
@@ -1202,7 +1334,14 @@ window.memoryUploadsInProgress = false;
         }, 1080);
       }
 
-      showNextGiftPhoto();
+      if (isPreBirthdayStage) {
+        window.startRecipientPhotos = () => {
+          floatingLayer.style.visibility = "visible";
+          showNextGiftPhoto();
+        };
+      } else {
+        showNextGiftPhoto();
+      }
     }
 
     return;
@@ -1398,6 +1537,11 @@ for(let i=0;i<12;i++){
       progressEl.textContent = "10 में से 10 सही! अब फोटो यादें अनलॉक हो गई हैं!";
       feedbackEl.textContent = "अपनी फोटो यादों का आनंद लें! 💗";
 
+      if (recipient && params.get("stage") === "quiz") {
+        memoryBox.style.display = "none";
+        openButton.style.display = "none";
+        makeLink();
+      }
       return;
     }
     if (used.size === pool.length) {
@@ -1452,11 +1596,29 @@ for(let i=0;i<12;i++){
       openingTheme.currentTime = 0;
     }
     const secondPageSong = document.getElementById("secondPageSong");
-    const isSharedFinalPage = new URLSearchParams(location.search).has("to");
+    const introParams = new URLSearchParams(location.search);
+    const stage = introParams.get("stage");
+    const isSharedWelcome = introParams.has("to") && stage === "welcome";
+    const isSharedQuiz = stage === "quiz";
 
-    if (isSharedFinalPage) {
+    if (isSharedWelcome) {
+      const creator = document.getElementById("creator");
+      const quiz = document.getElementById("loveQuiz");
+      if (creator && quiz) {
+        creator.style.display = "";
+        Array.from(creator.children).forEach(child => {
+          child.style.display = child === quiz ? "" : "none";
+        });
+        quiz.style.display = "";
+        const nextUrl = new URL(location.href);
+        nextUrl.searchParams.set("stage", "quiz");
+      params.set("stage", "quiz");
+        history.replaceState({}, "", nextUrl);
+      }
+      if (secondPageSong) secondPageSong.play().catch(() => {});
+    } else if (introParams.has("to") && !isSharedQuiz) {
       makeLink();
-    } else if (secondPageSong) {
+    } else if (!isSharedQuiz && secondPageSong) {
       secondPageSong.play().catch(() => {});
     }
     const symbols = ["♡", "♥", "✦", "✨", "✧", "💛"];
@@ -1478,6 +1640,18 @@ for(let i=0;i<12;i++){
     window.setTimeout(() => intro.remove(), 1000);
   };
   enter.addEventListener("click", closeIntro);
+
+  // Third page: open birthday surprise directly without showing intro.
+  const pageParams = new URLSearchParams(location.search);
+  const pageStage = pageParams.get("stage");
+
+  if (
+    pageParams.has("to") &&
+    pageStage !== "welcome" &&
+    pageStage !== "quiz"
+  ) {
+    closeIntro();
+  }
 })();
 </script>
 
