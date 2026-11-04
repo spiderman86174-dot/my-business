@@ -1181,8 +1181,6 @@ function showSurprise(name, message = ""){
   const oldIntro = document.getElementById("cinematicIntro");
   if (oldIntro) oldIntro.remove();
 
-  document.getElementById("introTitle").textContent = "Happy Birthday " + name + " ❤️";
-  document.querySelector(".cinematic-name").textContent = "Happy Birthday " + name + " ❤️";
   
   const creatorPage = document.getElementById("creator");
   const surprisePage = document.getElementById("surprise");
@@ -1196,21 +1194,17 @@ function showSurprise(name, message = ""){
     surprisePage.style.display = "block";
     surprisePage.classList.add("cinematic-enter");
   }, 650);
-  document.getElementById("greeting").textContent =
-    "A special surprise for " + name + " 💗";
+  const greeting = document.getElementById("greeting");
+  const letterText = document.getElementById("letterText");
+  const cake = document.getElementById("birthdayCake");
 
-  const cakeName = document.getElementById("cakeName");
-  if (cakeName) {
-    cakeName.textContent = name;
-    cakeName.style.fontSize = Math.max(10, Math.min(18, 170 / Math.max(name.length, 1))) + "px";
-    cakeName.style.whiteSpace = "nowrap";
-    cakeName.style.overflow = "hidden";
-    cakeName.style.textOverflow = "ellipsis";
-    cakeName.style.boxSizing = "border-box";
-  }
-  document.getElementById("letterText").textContent = message;
-  document.getElementById("letterText").style.display =
-    message ? "block" : "none";
+  greeting.textContent = "HAPPY BIRTHDAY " + name + " ❤️";
+  greeting.style.display = "block";
+
+  letterText.textContent = message;
+  letterText.style.display = message ? "block" : "none";
+
+  cake.style.order = "";
   document.title = "A Surprise for " + name;
   createBirthdayEffects();
   startBirthdayEffects();
