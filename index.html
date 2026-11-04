@@ -1759,7 +1759,7 @@ for(let i=0;i<12;i++){
   if (!intro || !enter) return;
 
   const initialParams = new URLSearchParams(location.search);
-  if (initialParams.has("to") && initialParams.get("stage") === "quiz") {
+  if (initialParams.has("to") && initialParams.get("stage") !== "welcome") {
     intro.remove();
     return;
   }
