@@ -24,6 +24,33 @@ button:active{transform:scale(.98)}
 @media(hover:hover){button:hover{filter:brightness(1.06);transform:translateY(-2px)}}
 .secondary{background:linear-gradient(110deg,#e1c9ff,#c8b4ff)}
 #surprise{display:none}
+
+@keyframes creatorFadeOut {
+  from { opacity:1; transform:translateY(0) scale(1); }
+  to { opacity:0; transform:translateY(-12px) scale(.985); }
+}
+
+@keyframes surpriseFadeIn {
+  from { opacity:0; transform:translateY(18px) scale(.985); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+
+#creator.cinematic-exit {
+  animation:creatorFadeOut .65s ease forwards;
+  pointer-events:none;
+}
+
+#surprise.cinematic-enter {
+  animation:surpriseFadeIn .85s ease both;
+}
+
+@media (prefers-reduced-motion:reduce) {
+  #creator.cinematic-exit,
+  #surprise.cinematic-enter {
+    animation:none !important;
+  }
+}
+
 .heart{position:fixed;bottom:-40px;z-index:0;pointer-events:none;user-select:none;will-change:transform,opacity;animation:floatUp var(--duration,7s) linear forwards;filter:drop-shadow(0 0 10px #ff8ac7);opacity:0}
 @keyframes floatUp{to{transform:translateY(-110vh) rotate(25deg);opacity:0}}
 @keyframes cardIn{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -1131,8 +1158,18 @@ function showSurprise(name, message = ""){
   document.getElementById("introTitle").textContent = "Happy Birthday " + name + " ❤️";
   document.querySelector(".cinematic-name").textContent = "Happy Birthday " + name + " ❤️";
   
-  document.getElementById("creator").style.display = "none";
-  document.getElementById("surprise").style.display = "block";
+  const creatorPage = document.getElementById("creator");
+  const surprisePage = document.getElementById("surprise");
+
+  creatorPage.classList.remove("cinematic-exit");
+  surprisePage.classList.remove("cinematic-enter");
+  creatorPage.classList.add("cinematic-exit");
+
+  window.setTimeout(() => {
+    creatorPage.style.display = "none";
+    surprisePage.style.display = "block";
+    surprisePage.classList.add("cinematic-enter");
+  }, 650);
   document.getElementById("greeting").textContent =
     "A special surprise for " + name + " 💗";
   document.getElementById("letterText").textContent = message;
@@ -1721,6 +1758,11 @@ for(let i=0;i<12;i++){
   const enter = document.getElementById("enterSurprise");
   if (!intro || !enter) return;
 
+  const initialParams = new URLSearchParams(location.search);
+  if (initialParams.has("to") && initialParams.get("stage") === "quiz") {
+    intro.remove();
+    return;
+  }
 
   const closeIntro = () => {
     const openingTheme = document.getElementById("openingTheme");
