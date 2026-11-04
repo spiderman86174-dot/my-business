@@ -1190,6 +1190,16 @@ function showSurprise(name, message = ""){
   greeting.textContent = "HAPPY BIRTHDAY " + name + " ❤️";
   letterText.textContent = message;
 
+  const cakeName = document.getElementById("cakeName");
+  if (cakeName) {
+    cakeName.textContent = name;
+    cakeName.style.fontSize = Math.max(10, Math.min(18, 170 / Math.max(name.length, 1))) + "px";
+    cakeName.style.whiteSpace = "nowrap";
+    cakeName.style.overflow = "hidden";
+    cakeName.style.textOverflow = "ellipsis";
+    cakeName.style.boxSizing = "border-box";
+  }
+
   creatorPage.classList.remove("cinematic-exit");
   surprisePage.classList.remove("cinematic-enter");
   creatorPage.classList.add("cinematic-exit");
