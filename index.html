@@ -1181,9 +1181,14 @@ function showSurprise(name, message = ""){
   const oldIntro = document.getElementById("cinematicIntro");
   if (oldIntro) oldIntro.remove();
 
-  
   const creatorPage = document.getElementById("creator");
   const surprisePage = document.getElementById("surprise");
+  const greeting = document.getElementById("greeting");
+  const letterText = document.getElementById("letterText");
+  const cake = document.getElementById("birthdayCake");
+
+  greeting.textContent = "HAPPY BIRTHDAY " + name + " ❤️";
+  letterText.textContent = message;
 
   creatorPage.classList.remove("cinematic-exit");
   surprisePage.classList.remove("cinematic-enter");
@@ -1191,25 +1196,28 @@ function showSurprise(name, message = ""){
 
   window.setTimeout(() => {
     creatorPage.style.display = "none";
-    surprisePage.style.display = "block";
+    surprisePage.style.setProperty("display", "block", "important");
     surprisePage.classList.add("cinematic-enter");
+
+    greeting.style.setProperty("display", "block", "important");
+    greeting.style.setProperty("visibility", "visible", "important");
+    greeting.style.setProperty("opacity", "1", "important");
+
+    if (message) {
+      letterText.style.setProperty("display", "block", "important");
+      letterText.style.setProperty("visibility", "visible", "important");
+      letterText.style.setProperty("opacity", "1", "important");
+    } else {
+      letterText.style.display = "none";
+    }
+
+    cake.style.order = "";
   }, 650);
-  const greeting = document.getElementById("greeting");
-  const letterText = document.getElementById("letterText");
-  const cake = document.getElementById("birthdayCake");
 
-  greeting.textContent = "HAPPY BIRTHDAY " + name + " ❤️";
-  greeting.style.display = "block";
-
-  letterText.textContent = message;
-  letterText.style.display = message ? "block" : "none";
-
-  cake.style.order = "";
   document.title = "A Surprise for " + name;
   createBirthdayEffects();
   startBirthdayEffects();
 }
-
 async function createCreatorShareLink(){
   const name = safeName(document.getElementById("name").value);
   const message = document.getElementById("letter").value.trim().slice(0,1000);
