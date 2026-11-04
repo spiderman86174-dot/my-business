@@ -856,52 +856,106 @@ audio {
 }
 
 
-
-/* Exact saved artwork for the first screen only */
+/* DREAMY NEON LOVE LANDING — first screen only */
 #cinematicIntro {
-  padding: 0 !important;
-  background: #090611 url("musu.png") center center / 100% 100% no-repeat !important;
+  background: radial-gradient(ellipse at 50% 48%, #a83acb 0%, #652078 34%, #28103f 68%, #090611 100%) !important;
 }
-#cinematicIntro::before, #cinematicIntro::after { display: none !important; }
 #cinematicIntro .intro-content {
-  position: absolute;
-  inset: 0;
+  width: min(100%, 520px);
+  padding: 20px 14px;
+}
+.intro-scene {
+  position: relative;
+  width: min(100%, 390px);
+  height: clamp(150px, 34vw, 205px);
+  margin: 8px auto 2px;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.scene-center {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  gap: clamp(2px, 2vw, 12px);
   width: 100%;
   height: 100%;
-  max-width: none;
-  padding: 0;
-  margin: 0;
-  animation: none;
+  padding-bottom: 12px;
 }
-#cinematicIntro .intro-content > * { display: none !important; }
-#cinematicIntro {
-  pointer-events: auto !important;
+.scene-teddy, .scene-gift, .scene-heart {
+  display: inline-block;
+  filter: drop-shadow(0 0 12px #ff9bea) drop-shadow(0 0 22px #c85aff);
+  animation: sceneGlow 2.2s ease-in-out infinite alternate, sceneBob 3.8s ease-in-out infinite;
 }
-#cinematicIntro .intro-content {
-  pointer-events: none !important;
-}
-#enterSurprise {
-  pointer-events: auto !important;
-  touch-action: manipulation;
-  display: block !important;
+.scene-teddy { font-size: clamp(62px, 17vw, 94px); animation-delay: -.5s; }
+.scene-gift { font-size: clamp(58px, 15vw, 82px); animation-delay: -1.2s; }
+.scene-heart { align-self: center; font-size: clamp(34px, 9vw, 48px); animation-delay: -.8s; }
+.scene-item {
   position: absolute;
-  left: 13.5%;
-  top: 78%;
-  width: 73%;
-  height: 9%;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #ff4fa3, #9b4dff);
-  box-shadow: 0 4px 18px #ff4fa388;
-  color: white;
-  font-size: clamp(12px, 3.5vw, 17px);
-  font-weight: 800;
-  animation: none;
-  cursor: pointer;
-  z-index: 5;
+  z-index: 2;
+  filter: drop-shadow(0 0 9px #ff8be7);
+  animation: sceneTwinkle 2s ease-in-out infinite alternate;
 }
+.scene-butterfly { left: 5%; top: 14%; font-size: 30px; animation: sceneDrift 4s ease-in-out infinite; }
+.scene-butterfly-two { left: auto; right: 5%; top: 20%; animation-delay: -2s; }
+.scene-rose { left: 12%; bottom: 4%; font-size: 30px; animation-delay: -.7s; }
+.scene-rose-two { left: auto; right: 12%; bottom: 5%; animation-delay: -1.4s; }
+.scene-star { color: #fff4ad; font-size: 30px; text-shadow: 0 0 10px #fff, 0 0 22px #ff8be7; }
+.scene-star-one { left: 23%; top: 2%; }
+.scene-star-two { right: 22%; top: 3%; animation-delay: -.8s; }
+.scene-star-three { left: 48%; bottom: 0; animation-delay: -1.2s; }
+@keyframes sceneGlow {
+  from { filter: drop-shadow(0 0 7px #ff9bea); }
+  to { filter: drop-shadow(0 0 17px #fff) drop-shadow(0 0 28px #d34cff); }
+}
+@keyframes sceneBob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(-7px) rotate(2deg); }
+}
+@keyframes sceneTwinkle {
+  from { opacity: .55; transform: scale(.82) rotate(-10deg); }
+  to { opacity: 1; transform: scale(1.2) rotate(12deg); }
+}
+@keyframes sceneDrift {
+  0%, 100% { transform: translate(0, 0) rotate(-8deg); }
+  50% { transform: translate(7px, -10px) rotate(10deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-item, .scene-teddy, .scene-gift, .scene-heart { animation: none !important; }
+}
+
+
+/* Premium founder footer */
+.founder-social-footer{
+  display:flex;flex-direction:column;align-items:center;
+  gap:5px;margin:22px auto 4px;padding-top:13px;
+  border-top:1px solid #ffffff25;position:relative;z-index:5;
+}
+.founder-social-name{
+  font:800 12px/1.2 Arial,sans-serif;letter-spacing:3px;
+  color:#fff2ff;text-shadow:0 2px 2px #42134f,0 0 10px #f59bea;
+}
+.founder-social-role{
+  font:600 7px/1.3 Arial,sans-serif;letter-spacing:2px;
+  color:#f2d5fa;
+}
+.founder-social-icons{
+  display:flex;justify-content:center;align-items:center;
+  gap:9px;margin-top:5px;
+}
+.founder-social-icons a{
+  width:30px;height:30px;display:grid;place-items:center;
+  border:1px solid #f8d5ff99;border-radius:9px;
+  color:#fff;text-decoration:none;
+  background:linear-gradient(145deg,#ffffff45,#9b54bd 55%,#351047);
+  box-shadow:0 3px 0 #210b35,0 5px 10px #09061188,
+             inset 0 1px 3px #ffffff90;
+  -webkit-tap-highlight-color:transparent;
+}
+.founder-social-icons a:active{transform:translateY(2px);box-shadow:0 1px 0 #210b35,inset 0 1px 4px #ffffff80}
+.founder-social-icons svg{width:15px;height:15px;fill:currentColor}
+
 </style>
 </head>
 
@@ -928,7 +982,9 @@ audio {
     </div>
     <h1 id="introTitle" class="intro-title">A Little Love<br>Surprise 💜</h1>
     <p class="intro-caption">A special surprise, made<br>just for you 💗</p>
-    <button id="enterSurprise" type="button" aria-label="Open Your Surprise">Open Your Surprise</button>
+    <button id="enterSurprise" type="button">📸 Open Your Surprise</button>
+
+
   </div>
 </div>
 
@@ -1698,6 +1754,31 @@ for(let i=0;i<12;i++){
   enter.addEventListener("click", closeIntro);
 })();
 </script>
+
+
+
+  <div class="founder-social-footer">
+    <div class="founder-social-name">AJAY KUMAR</div>
+    <div class="founder-social-role">FOUNDER &amp; CREATOR</div>
+    <nav class="founder-social-icons" aria-label="Social profiles">
+      <a href="https://www.instagram.com/sinu.12503?obrf=MWF6dDhpYm5rN2Rkeg==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6zm5.5-3a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>
+      </a>
+      <a href="https://www.facebook.com/share/1U1gqnQ5Wm/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V4a22 22 0 0 0-2.5-.1c-2.5 0-4.2 1.5-4.2 4.3V10H7.3v3h2.8v8z"/></svg>
+      </a>
+      <a href="https://x.com/ajayhvsf" target="_blank" rel="noopener noreferrer" aria-label="X">
+        <svg viewBox="0 0 24 24"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3L12 14.9 5.8 22H2.7l7.3-8.4L2.2 2h6.5l4.5 6.7L18.9 2zm-1.1 18h1.7L7.6 3.9H5.8z"/></svg>
+      </a>
+      <a href="https://github.com/spiderman86174-dot" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.9c-2.8.6-3.4-1.2-3.4-1.2-.5-1.1-1.1-1.4-1.1-1.4-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.3 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.2-4.5-1.1-4.5-4.9 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.7 9.7 0 0 1 5.1 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.8-2.3 4.7-4.5 4.9.4.3.7.9.7 1.8V21c0 .3.2.6.7.5A10 10 0 0 0 12 2z"/></svg>
+      </a>
+      <a href="https://www.youtube.com/@Shakti-k6c-g8v" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+        <svg viewBox="0 0 24 24"><path d="M23 7a3 3 0 0 0-2.1-2.1C19 4.4 12 4.4 12 4.4s-7 0-8.9.5A3 3 0 0 0 1 7a31 31 0 0 0-.5 5 31 31 0 0 0 .5 5 3 3 0 0 0 2.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5A3 3 0 0 0 23 17a31 31 0 0 0 .5-5 31 31 0 0 0-.5-5zM9.7 15.4V8.6l6 3.4z"/></svg>
+      </a>
+    </nav>
+  </div>
+
 
 </body>
 </html>
